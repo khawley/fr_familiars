@@ -24,9 +24,10 @@ class PetFamiliars:
                               r'and wants to learn more about your clan\.')
 
     bestiary = []
-    awakened = []
-    locked = []
-    taming = []
+    to_tame = []
+    bestiary_breakdown = {}
+    taming_results = []
+    taming_breakdown = {}
 
     def __init__(self, bestiary_list=None, fr_cookie=None, get_pages=1):
         self.fr_cookie = fr_cookie or my_fr_cookie
@@ -39,69 +40,97 @@ class PetFamiliars:
         if not self.bestiary:
             self.bestiary = Bestiary(
                 pages=get_pages, fr_cookie=my_fr_cookie).get_list()
+        self.__breakdown_bestiary()
         return self.bestiary
 
-    def breakdown_bestiary(self):
+    def __breakdown_bestiary(self):
+        if not self.bestiary:
+            sys.stderr.write("Error: No bestiary to breakdown")
+            return
+
+        awakened = []
+        locked = []
+        taming = []
+
         for beast in self.bestiary:
             loyalty = beast["loyalty"].lower()
             if loyalty == "awakened":
-                self.awakened.append(beast)
+                awakened.append(beast)
             elif loyalty == "locked":
-                self.locked.append(beast)
+                locked.append(beast)
             else:
-                self.taming.append(beast)
+                taming.append(beast)
+
         if len(self.bestiary) != \
-                (len(self.locked) + len(self.awakened) + len(self.taming)):
+                (len(locked) + len(awakened) + len(taming)):
             sys.stderr.write("Error!  Not adding up correctly!")
 
+        self.bestiary_breakdown = {
+            "awakened": awakened,
+            "locked": locked,
+            "taming": taming
+        }
+        self.to_tame = taming
+
     def print_bestiary_breakdown(self):
-        if not self.awakened or self.locked or self.taming:
-            if not self.bestiary:
-                self.get_bestiary()
-            self.breakdown_bestiary()
+        if not self.bestiary:
+            self.get_bestiary()
 
         # print stats
-        print "locked: ", len(self.locked), " -", self.locked
-        print "awakened: ", len(self.awakened)
-        print "taming: ", len(self.taming)
+        print "locked: ", len(self.bestiary_breakdown["locked"]),
+        print " -", self.bestiary_breakdown["locked"]
+        print "awakened: ", len(self.bestiary_breakdown["awakened"])
+        print "taming: ", len(self.bestiary_breakdown["taming"])
         print "total =", len(self.bestiary)
         print
 
-    def main(self):
-        # read in bestiary file, sort dict by non-awakened, and non-locked
-        with open('bestiary_dict.py') as bestiary_file:
-            bestiary = eval(bestiary_file.read())
-        print bestiary
-        awakened = [b for b in bestiary if b["loyalty"].lower() == "awakened"]
-        locked = [b for b in bestiary if b["loyalty"].lower() == "locked"]
-        taming = [b for b in bestiary if b["loyalty"].lower()
-                  not in ("locked", "awakened")]
+    def pet_all_beasts(self):
+        if not self.bestiary:
+            self.get_bestiary()
+        self.taming_results = [self.pet_beast(beast["id"])
+                               for beast in self.to_tame]
+        self.__breakdown_taming_results()
 
-        # print stats
-        print "locked: ", len(locked), " -", locked
-        print "awakened: ", len(awakened)
-        print "taming: ", len(taming)
-        print "total =", len(bestiary)
-        if len(bestiary) != (len(locked) + len(awakened) + len(taming)):
-            print "Error!  Not adding up correctly!"
-        print
+    def __breakdown_taming_results(self):
+        if not self.taming_results:
+            sys.stderr.write("Error: No taming_results to breakdown")
+            return
 
-        # try to pet everyone
-        taming_results = [self.pet_beast(beast["id"]) for beast in taming]
+        gold_chests = []
+        iron_chests = 0
+        rusted_chests = 0
+        failures = []
+        for result in self.taming_results:
+            if result["chest"]:
+                if result["chest"] == "gold":
+                    gold_chests.append(result)
+                elif result["chest"] == "iron":
+                    iron_chests += 1
+                elif result["chest"] == "rusted":
+                    rusted_chests += 1
 
-        # prep the results
-        gold_chests = [result for result in taming_results
-                       if result["chest"] == "gold"]
+            if result["msg"] != "rewards":
+                failures.append(result)
 
-        print "gold_chests:", len(gold_chests), gold_chests
-        print "iron_chests:", len([result for result in taming_results
-                                   if result["chest"] == "iron"])
-        print "rusted_chests:", len([result for result in taming_results
-                                     if result["chest"] == "rusted"])
-        failures = [result for result in taming_results
-                    if result["msg"] != "rewards"]
-        if failures:
-            print "failed:", len(failures), failures
+        self.taming_breakdown = {
+            "gold_chests": gold_chests,
+            "iron_chests": iron_chests,
+            "rusted_chests": rusted_chests,
+            "failures": failures
+        }
+
+    def print_taming_breakdown(self):
+        if not self.taming_breakdown:
+            self.__breakdown_taming_results()
+
+        print "gold_chests:", len(self.taming_breakdown["gold_chests"]),
+        print "-", self.taming_breakdown["gold_chests"]
+        print "iron_chests:", len(self.taming_breakdown["iron_chests"])
+        print "rusted_chests:", len(self.taming_breakdown["rusted_chests"])
+
+        if self.taming_breakdown["failures"]:
+            print "failed:", len(self.taming_breakdown["failures"]),
+            print "-", self.taming_breakdown["failures"]
 
     def pet_beast(self, b_id):
         url = "http://flightrising.com/includes/ol/fam_bonding.php"
