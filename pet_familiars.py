@@ -24,7 +24,7 @@ class PetFamiliars:
                               r'and wants to learn more about your clan\.')
 
     send_headers = []
-    bestiary_breakdown = []
+    bestiary_breakdown = {}
     to_tame = []
     taming_results = []
     taming_breakdown = {}
@@ -66,6 +66,13 @@ class PetFamiliars:
         for beast in self.bestiary_breakdown["taming"]:
             self.echo("-- petting " + beast["name"])
             result = self.pet_one_familiar(beast["id"])
+            if result["msg"] == "not equipped":
+                self.__equip_familiar(beast["id"])
+                result = self.pet_one_familiar(beast["id"])
+                if result["msg"] == "not equipped":
+                    sys.stderr.write("Error: Tried to equip familiar '"
+                                     + str(beast["name"]) +
+                                     "' but still failed to 'pet'")
             self.taming_results.append(result)
             self.echo(" -- message: " + result["msg"], True)
         self.__breakdown_taming_results()
@@ -118,13 +125,6 @@ class PetFamiliars:
         url = "http://flightrising.com/includes/ol/fam_bonding.php"
         result = self.__parse_response(
             MyCurl.curl(url, self.send_headers, {"id": b_id}))
-
-        if result["msg"] == "not equipped":
-            self.__equip_familiar(b_id)
-            result = self.pet_one_familiar(b_id)
-            if result["msg"] == "not_equipped":
-                sys.stderr.write("Error: Tried to equip familiar id " + str(b_id) +
-                                 " but still failed to 'pet'")
         return result
 
     def __equip_familiar(self, b_id):
@@ -194,8 +194,7 @@ class PetFamiliars:
 
         return result
 
-
-# main()
-# pet_beast(413)
-print PetFamiliars().get_besiary(pages=1)
-# print parse_response(response)
+pf = PetFamiliars(verbose=True)
+pf.get_bestiary()
+pf.pet_my_familiars()
+pf.print_taming_breakdown()
