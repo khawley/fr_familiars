@@ -33,6 +33,14 @@ class Bestiary:
         self.pages = pages or 43
         self.fr_cookie = fr_cookie or my_fr_cookie
         self.verbose = verbose
+        # must have User-Agent set
+        self.send_headers = [
+            'Accept-Language: en-US,en;q=0.8',
+            'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.86 Safari/537.36',
+            'Upgrade-Insecure-Requests: 1',
+            'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            self.fr_cookie,
+        ]
 
     def echo(self, msg, newline=False):
         if newline:
@@ -46,21 +54,22 @@ class Bestiary:
         :return: list of dicts, of all beasts
         :rtype: list
         """
-        # must have User-Agent set
-        send_headers = [
-            'Accept-Language: en-US,en;q=0.8',
-            'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.86 Safari/537.36',
-            'Upgrade-Insecure-Requests: 1',
-            'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            self.fr_cookie,
-        ]
+
         for i in range(1, self.pages + 1):
-            url = self.base_url + str(i)
-            self.echo("curling " + url)
-            html = MyCurl.curl(url, send_headers)
-            # html = open("bestiary_response.html")
-            self.echo(" -- parsing", True)
-            self.__parse_html(html)
+            self.__get_page(i)
+        self.__breakdown_beasts()
+        return self.beasts_breakdown
+
+    def __get_page(self, page):
+        url = self.base_url + str(page)
+        self.echo("curling " + url)
+        html = MyCurl.curl(url, self.send_headers)
+        # html = open("bestiary_response.html")
+        self.echo(" -- parsing", True)
+        self.__parse_html(html)
+
+    def get_on_page(self, page):
+        self.__get_page(page)
         self.__breakdown_beasts()
         return self.beasts_breakdown
 
