@@ -168,14 +168,16 @@ class PetFamiliars:
         gold = ""
         chest = ""
         loyalty = ""
-
+        result = {
+            "beast": beast
+        }
         # find all imgs, then find parents, get text, and have number
         imgs = div.find_all("img")
         for img in imgs:
             # is treasure pile?
             match = re.search(self.treasure_url_patt, img.attrs["src"])
             if match:
-                gold = img.find_parent("span").text.strip()
+                result["gold"] = img.find_parent("span").text.strip()
                 continue
 
             # has a chest?
@@ -183,25 +185,19 @@ class PetFamiliars:
             if match:
                 chest_id = match.group("chest_id")
                 if chest_id == "576":
-                    chest = "gold"
+                    result["chest"] = "gold"
                 elif chest_id == "575":
-                    chest = "iron"
+                    result["chest"] = "iron"
                 elif chest_id == "574":
-                    chest = "rusted"
+                    result["chest"] = "rusted"
                 else:
-                    chest = "??"
+                    result["chest"] = "??"
         match = re.search(self.loyalty_patt, div.text)
         if match:
-            beast = match.group("beast")
-            loyalty = match.group("loyalty")
+            result["beast"] = match.group("beast")
+            result["loyalty"] = match.group("loyalty")
 
-        return {
-            "msg": "rewards",
-            "beast": beast,
-            "gold": gold,
-            "chest": chest,
-            "loyalty": loyalty
-        }
+        return result
 
 
 # main()
