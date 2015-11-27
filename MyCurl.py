@@ -1,43 +1,54 @@
 import pycurl
 import re
 from StringIO import StringIO
+from urllib import urlencode
 
 
 class MyCurl:
-    def __init__(self, url, send_headers=[], post_data={}, verbose=False):
+    def __init__(self):
         self.headers = {}
-        self.url = url
-        self.send_headers = send_headers
-        self.post_data = post_data
-        self.verbose = verbose
+        # self.url = url
+        # self.send_headers = send_headers
+        # self.post_data = post_data or {}
+        # self.verbose = verbose
 
-    def curl(self):#,url, send_headers=[], post_data={}, verbose=False):
-        buffer = StringIO()
+    @classmethod
+    def curl(cls, url, send_headers=None, post_data=None, verbose=False):
+        response_buffer = StringIO()
 
         c = pycurl.Curl()
-        c.setopt(pycurl.URL, self.url)
-        c.setopt(pycurl.HTTPHEADER, self.send_headers)
-        c.setopt(c.WRITEDATA, buffer)
-        c.setopt(c.HEADERFUNCTION, self.header_function)
-        if self.verbose:
+        c.setopt(pycurl.URL, url)
+        if send_headers:
+            c.setopt(pycurl.HTTPHEADER, send_headers)
+        if post_data:
+            # post_data = {'field': 'value'}
+            # Form data must be provided already urlencoded.
+            postfields = urlencode(post_data)
+            # Sets request method to POST,
+            # Content-Type header to application/x-www-form-urlencoded
+            # and data to send in request body.
+            c.setopt(c.POSTFIELDS, postfields)
+        c.setopt(c.WRITEDATA, response_buffer)
+        c.setopt(c.HEADERFUNCTION, cls.__header_function)
+        if verbose:
             c.setopt(c.VERBOSE, True)
         c.perform()
         c.close()
 
         encoding = None
-        if 'content-type' in self.headers:
-            content_type = self.headers['content-type'].lower()
+        if 'content-type' in cls.headers:
+            content_type = cls.headers['content-type'].lower()
             match = re.search('charset=(\S+)', content_type)
             if match:
                 encoding = match.group(1)
         else:
             encoding = 'iso-8859-1'
 
-        body = buffer.getvalue()
+        body = response_buffer.getvalue()
         # Decode using the encoding we figured out.
         return body.decode(encoding)
 
-    def header_function(self, header_line):
+    def __header_function(self, header_line):
         # Header lines include the first status line (HTTP/1.x ...).
         # We are going to ignore all lines that don't have a colon in them.
         # This will botch headers that are split on multiple lines...
