@@ -30,7 +30,7 @@ loyalty_patt = re.compile(r'Your (?P<beast>.+) is (?P<loyalty>\w+) and wants'
 
 def main():
     # read in bestiary file, sort dict by non-awakened, and non-locked
-    with open('bestiary.py') as bestiary_file:
+    with open('bestiary_dict.py') as bestiary_file:
         bestiary = eval(bestiary_file.read())
     print bestiary
     if type(bestiary) is dict:
