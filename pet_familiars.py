@@ -119,17 +119,17 @@ class PetFamiliars:
         ]
 
         # for id in ids:
-        result = self.parse_response(MyCurl.curl(url, send_headers, {"id": b_id}))
+        result = self.__parse_response(MyCurl.curl(url, send_headers, {"id": b_id}))
 
         if result["msg"] == "not equipped":
             url = 'http://flightrising.com/includes/familiar_active.php?id=' + str(dragon_id) + '&itm=' + str(b_id)
-            result = self.parse_response(MyCurl.curl(url, send_headers))
+            result = self.__parse_response(MyCurl.curl(url, send_headers))
             if result["msg"] == "not_equipped":
                 sys.stderr.write("Error: Tried to equip familiar id " + str(b_id) +
                                  " but still failed to 'pet'")
         return result
 
-    def parse_response(self, html):
+    def __parse_response(self, html):
         soup = BeautifulSoup(html, "html.parser")
         divs = soup.find_all("div")
         result = {}
@@ -155,11 +155,11 @@ class PetFamiliars:
             # successful?
             match = re.search(self.rewards_patt, div.text)
             if match:
-                result = self.parse_rewards(div)
+                result = self.__parse_rewards(div)
                 break
         return result
 
-    def parse_rewards(self, div):
+    def __parse_rewards(self, div):
         # match out loyalty level.
         # match out the gold
         # match out chests
