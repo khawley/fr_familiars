@@ -29,7 +29,8 @@ class PetFamiliars:
     taming_results = []
     taming_breakdown = {}
 
-    def __init__(self, bestiary_list=None, fr_cookie=None, get_pages=1):
+    def __init__(self, bestiary_list=None, fr_cookie=None, get_pages=1, verbose=False):
+        self.verbose = verbose
         self.fr_cookie = fr_cookie or my_fr_cookie
         self.__get_pages = get_pages
         self.bestiary_breakdown = bestiary_list or []  # self.get_bestiary()
@@ -50,7 +51,7 @@ class PetFamiliars:
         get_pages = pages or self.__get_pages
         if not self.bestiary_breakdown:
             self.bestiary_breakdown = Bestiary(
-                pages=get_pages, fr_cookie=my_fr_cookie).get_list()
+                pages=get_pages, fr_cookie=self.fr_cookie, verbose=self.verbose).get_list()
         return self.bestiary_breakdown
 
     def pet_my_familiars(self):

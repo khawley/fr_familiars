@@ -23,14 +23,22 @@ class Bestiary:
     base_url = "http://flightrising.com/main.php?" \
                "p=bestiary&tab=familiars&page="
 
-    def __init__(self, pages=None, fr_cookie=None):
+    def __init__(self, pages=None, fr_cookie=None, verbose=False):
         """
         :param int pages: Number of pages from 1 to 'pages' to parse
-        :param fr_cookie: Cookie that has login information
+        :param string fr_cookie: Cookie that has login information
+        :param bool verbose: Print status statements
         :return:
         """
         self.pages = pages or 43
         self.fr_cookie = fr_cookie or my_fr_cookie
+        self.verbose = verbose
+
+    def echo(self, msg, newline=False):
+        if newline:
+            msg += "\n"
+        if self.verbose:
+            sys.stdout.write(msg)
 
     def get_list(self):
         """Curl and then parse all bestiary pages, returning results.
@@ -48,10 +56,10 @@ class Bestiary:
         ]
         for i in range(1, self.pages + 1):
             url = self.base_url + str(i)
-            print "curling " + url,
+            self.echo("curling " + url)
             html = MyCurl.curl(url, send_headers)
             # html = open("bestiary_response.html")
-            print " -- parsing"
+            self.echo(" -- parsing", True)
             self.__parse_html(html)
         self.__breakdown_beasts()
         return self.beasts_breakdown
