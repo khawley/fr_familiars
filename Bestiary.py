@@ -6,14 +6,17 @@ import re
 import sys
 from HTMLParser import HTMLParser
 
-my_fr_cookie = 'Cookie: PHPSESSID=askldfjlkanfln; userid=alsdflanf; user_key=1234567890; username=test;'
+my_fr_cookie = 'Cookie: PHPSESSID=askldfjlkanfln; userid=alsdflanf; ' \
+               'user_key=1234567890; username=test;'
+
 
 class Bestiary:
     img_patt = re.compile(r'\/(?P<beast_id>[\d]+)(?:_gray)?\.png')
     name_patt = re.compile(r'^\n(?P<name>[\w\s\-\'\*]+)\n(?P<description>(?:\n|.)*)\n$', re.UNICODE)
     loyalty_patt = re.compile(r'^(?P<loyalty>[\w]+)$')
     beasts = []
-    base_url = "http://flightrising.com/main.php?p=bestiary&tab=familiars&page="
+    base_url = "http://flightrising.com/main.php?" \
+               "p=bestiary&tab=familiars&page="
 
     def __init__(self, pages=None, fr_cookie=None):
         self.pages = pages or 43
