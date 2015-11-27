@@ -6,6 +6,7 @@ from urllib import urlencode
 
 class MyCurl:
     headers = {}
+
     def __init__(self):
         pass
         # self.url = url

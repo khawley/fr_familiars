@@ -12,7 +12,8 @@ my_fr_cookie = 'Cookie: PHPSESSID=askldfjlkanfln; userid=alsdflanf; ' \
 
 class Bestiary:
     img_patt = re.compile(r'\/(?P<beast_id>[\d]+)(?:_gray)?\.png')
-    name_patt = re.compile(r'^\n(?P<name>[\w\s\-\'\*]+)\n(?P<description>(?:\n|.)*)\n$', re.UNICODE)
+    name_patt = re.compile(r'^\n(?P<name>[\w\s\-\'\*]+)\n'
+                           r'(?P<description>(?:\n|.)*)\n$', re.UNICODE)
     loyalty_patt = re.compile(r'^(?P<loyalty>[\w]+)$')
     beasts = []
     base_url = "http://flightrising.com/main.php?" \
