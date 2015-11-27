@@ -9,10 +9,6 @@ class MyCurl:
 
     def __init__(self):
         pass
-        # self.url = url
-        # self.send_headers = send_headers
-        # self.post_data = post_data or {}
-        # self.verbose = verbose
 
     @classmethod
     def curl(cls, url, send_headers=None, post_data=None, verbose=False):
