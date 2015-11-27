@@ -40,7 +40,7 @@ class MyCurl:
             if match:
                 encoding = match.group(1)
         else:
-            encoding = 'iso-8859-1'
+            encoding = 'utf-8'
 
         body = response_buffer.getvalue()
         # Decode using the encoding we figured out.
