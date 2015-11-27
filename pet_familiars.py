@@ -174,7 +174,7 @@ class PetFamiliars:
         chest = ""
         loyalty = ""
         result = {
-            "beast": beast
+            "msg": "rewards"
         }
         # find all imgs, then find parents, get text, and have number
         imgs = div.find_all("img")
