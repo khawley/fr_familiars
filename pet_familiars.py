@@ -40,10 +40,10 @@ class PetFamiliars:
                 pages=get_pages, fr_cookie=my_fr_cookie).get_list()
         return self.bestiary_breakdown
 
-    def pet_all_beasts(self):
+    def pet_my_familiars(self):
         if not self.bestiary_breakdown:
             self.get_bestiary()
-        self.taming_results = [self.pet_beast(beast["id"])
+        self.taming_results = [self.pet_one_familiar(beast["id"])
                                for beast in self.bestiary_breakdown["taming"]]
         self.__breakdown_taming_results()
 
@@ -91,7 +91,7 @@ class PetFamiliars:
             print "failed:", len(self.taming_breakdown["failures"]),
             print "-", self.taming_breakdown["failures"]
 
-    def pet_beast(self, b_id):
+    def pet_one_familiar(self, b_id):
         url = "http://flightrising.com/includes/ol/fam_bonding.php"
 
         # must have User-Agent set
@@ -112,7 +112,7 @@ class PetFamiliars:
 
         if result["msg"] == "not equipped":
             self.__equip_familiar(b_id)
-            result = self.pet_beast(b_id)
+            result = self.pet_one_familiar(b_id)
             if result["msg"] == "not_equipped":
                 sys.stderr.write("Error: Tried to equip familiar id " + str(b_id) +
                                  " but still failed to 'pet'")
