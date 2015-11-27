@@ -6,20 +6,22 @@ from bs4 import BeautifulSoup
 from MyCurl import MyCurl
 from Bestiary import Bestiary
 
-my_fr_cookie = 'Cookie: PHPSESSID=askldfjlkanfln; userid=alsdflanf; user_key=1234567890; username=test;'
+my_fr_cookie = 'Cookie: PHPSESSID=askldfjlkanfln; userid=alsdflanf; ' \
+               'user_key=1234567890; username=test;'
 dragon_id = '11902870'
 
 
 class PetFamiliars:
 
     # regex globals, declared here to save on compile time
-    bonded_patt = re.compile(r'You have already bonded with this familiar today\.')
+    bonded_patt = re.compile(r'You have already bonded with this '
+                             r'familiar today\.')
     equipped_patt = re.compile(r'You do not have that familiar equipped\.')
     rewards_patt = re.compile(r"You[\\]?\'ve earned these rewards today:")
     treasure_url_patt = re.compile(r'\/treasure_pile\.png')
     chest_url_patt = re.compile(r'\/trinket\/(?P<chest_id>\d+)\.png')
-    loyalty_patt = re.compile(r'Your (?P<beast>.+) is (?P<loyalty>\w+) and wants'
-                              r' to learn more about your clan\.')
+    loyalty_patt = re.compile(r'Your (?P<beast>.+) is (?P<loyalty>\w+) '
+                              r'and wants to learn more about your clan\.')
 
     def __init__(self, fr_cookie=None):
         self.fr_cookie = fr_cookie or my_fr_cookie
@@ -80,7 +82,7 @@ class PetFamiliars:
 
         # must have User-Agent set
         send_headers = [
-            fr_cookie,
+            self.fr_cookie,
             'Origin: http://flightrising.com',
             'Accept-Encoding: gzip, deflate',
             'Accept-Language: en-US,en;q=0.8',
@@ -131,7 +133,7 @@ class PetFamiliars:
                 break
         return result
 
-    def parse_rewards(div):
+    def parse_rewards(self, div):
         # match out loyalty level.
         # match out the gold
         # match out chests
