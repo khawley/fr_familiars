@@ -11,6 +11,9 @@ my_fr_cookie = 'Cookie: PHPSESSID=askldfjlkanfln; userid=alsdflanf; ' \
 
 
 class Bestiary:
+    """
+    Class to curl bestiary pages and return results of beasts
+    """
     img_patt = re.compile(r'\/(?P<beast_id>[\d]+)(?:_gray)?\.png')
     name_patt = re.compile(r'^\n(?P<name>[\w\s\-\'\*]+)\n'
                            r'(?P<description>(?:\n|.)*)\n$', re.UNICODE)
@@ -20,10 +23,20 @@ class Bestiary:
                "p=bestiary&tab=familiars&page="
 
     def __init__(self, pages=None, fr_cookie=None):
+        """
+        :param int pages: Number of pages from 1 to 'pages' to parse
+        :param fr_cookie: Cookie that has login information
+        :return:
+        """
         self.pages = pages or 43
         self.fr_cookie = fr_cookie or my_fr_cookie
 
     def get_all(self):
+        """Curl and then parse all bestiary pages, returning results.
+
+        :return: list of dicts, of all beasts
+        :rtype: list
+        """
         # must have User-Agent set
         send_headers = [
             'Accept-Language: en-US,en;q=0.8',
@@ -32,16 +45,23 @@ class Bestiary:
             'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
             self.fr_cookie,
         ]
-        for i in range(1,self.pages + 1):
+        for i in range(1, self.pages + 1):
             url = self.base_url + str(i)
             print "curling " + url,
             html = MyCurl.curl(url, send_headers)
             # html = open("bestiary_response.html")
             print " -- parsing"
-            self.parse_html(html)
+            self.__parse_html(html)
         return self.beasts
 
-    def parse_html(self, html):
+    def __parse_html(self, html):
+        """
+        Given html, find an parse out all familiar.  Store in self.bestiary.
+        Store id, img_src, name, and loyalty of each beast found.
+
+        :param string html:
+        :return: None
+        """
         soup = BeautifulSoup(html, "html.parser")
         main_div = soup.select("#super-container")[0]
         this_div = list(main_div.children)[-2].find("div")
@@ -60,7 +80,7 @@ class Bestiary:
                 if type(div) == NavigableString:
                     continue
 
-                img = div.find(self.locate_beast_image)
+                img = div.find(self.__locate_beast_image)
                 if img:
                     src = img.attrs["src"]
                     match = re.search(self.img_patt, src)
@@ -91,7 +111,7 @@ class Bestiary:
                                  HTMLParser().unescape(span.text))
 
     @staticmethod
-    def locate_beast_image(tag):
+    def __locate_beast_image(tag):
         """ Given a tag, see if it matches the specifications
 
         :param Tag tag:
