@@ -23,30 +23,28 @@ class PetFamiliars:
     loyalty_patt = re.compile(r'Your (?P<beast>.+) is (?P<loyalty>\w+) '
                               r'and wants to learn more about your clan\.')
 
-    bestiary = []
+    bestiary_breakdown = []
     to_tame = []
-    bestiary_breakdown = {}
     taming_results = []
     taming_breakdown = {}
 
     def __init__(self, bestiary_list=None, fr_cookie=None, get_pages=1):
         self.fr_cookie = fr_cookie or my_fr_cookie
         self.__get_pages = get_pages
-        self.bestiary = bestiary_list or []  # self.get_bestiary()
+        self.bestiary_breakdown = bestiary_list or []  # self.get_bestiary()
 
     def get_bestiary(self, pages=None):
         get_pages = pages or self.__get_pages
-        if not self.bestiary:
-            self.bestiary = Bestiary(
+        if not self.bestiary_breakdown:
+            self.bestiary_breakdown = Bestiary(
                 pages=get_pages, fr_cookie=my_fr_cookie).get_list()
-        self.__breakdown_bestiary()
-        return self.bestiary
+        return self.bestiary_breakdown
 
     def pet_all_beasts(self):
-        if not self.bestiary:
+        if not self.bestiary_breakdown:
             self.get_bestiary()
         self.taming_results = [self.pet_beast(beast["id"])
-                               for beast in self.to_tame]
+                               for beast in self.bestiary_breakdown["taming"]]
         self.__breakdown_taming_results()
 
     def __breakdown_taming_results(self):
