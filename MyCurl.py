@@ -5,8 +5,9 @@ from urllib import urlencode
 
 
 class MyCurl:
+    headers = {}
     def __init__(self):
-        self.headers = {}
+        pass
         # self.url = url
         # self.send_headers = send_headers
         # self.post_data = post_data or {}
@@ -20,7 +21,7 @@ class MyCurl:
         c.setopt(pycurl.URL, url)
         if send_headers:
             c.setopt(pycurl.HTTPHEADER, send_headers)
-        if post_data:
+        if post_data and type(post_data) is dict:
             # post_data = {'field': 'value'}
             # Form data must be provided already urlencoded.
             postfields = urlencode(post_data)
@@ -29,7 +30,7 @@ class MyCurl:
             # and data to send in request body.
             c.setopt(c.POSTFIELDS, postfields)
         c.setopt(c.WRITEDATA, response_buffer)
-        c.setopt(c.HEADERFUNCTION, cls.__header_function)
+        # c.setopt(c.HEADERFUNCTION, cls.__header_function)
         if verbose:
             c.setopt(c.VERBOSE, True)
         c.perform()
