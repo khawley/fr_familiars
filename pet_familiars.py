@@ -16,6 +16,7 @@ except ImportError:
     from urllib import urlencode
 
 fr_cookie = 'Cookie: PHPSESSID=askldfjlkanfln; userid=alsdflanf; user_key=1234567890; username=test;'
+dragon_id = '11902870'
 
 
 # regex globals, declared here to save on compile time
@@ -90,7 +91,7 @@ def pet_beast(b_id):
     result = parse_response(curl(url, send_headers, {"id": b_id}))
 
     if result["msg"] == "not equipped":
-        url = 'http://flightrising.com/includes/familiar_active.php?id=11902870&itm=' + str(b_id)
+        url = 'http://flightrising.com/includes/familiar_active.php?id=' + str(dragon_id) + '&itm=' + str(b_id)
         result = parse_response(curl(url, send_headers))
         if result["msg"] == "not_equipped":
             sys.stderr.write("Error: Tried to equip familiar id " + str(b_id) +
