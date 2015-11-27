@@ -29,7 +29,7 @@ class PetFamiliars:
     taming_results = []
     taming_breakdown = {}
 
-    def __init__(self, bestiary_list=None, fr_cookie=None, get_pages=1, verbose=False):
+    def __init__(self, bestiary_list=None, fr_cookie=None, get_pages=None, verbose=False):
         self.verbose = verbose
         self.fr_cookie = fr_cookie or my_fr_cookie
         self.__get_pages = get_pages
@@ -47,6 +47,12 @@ class PetFamiliars:
             'X-Requested-With: XMLHttpRequest',
         ]
 
+    def echo(self, msg, newline=False):
+        if newline:
+            msg += "\n"
+        if self.verbose:
+            sys.stdout.write(msg)
+
     def get_bestiary(self, pages=None):
         get_pages = pages or self.__get_pages
         if not self.bestiary_breakdown:
@@ -57,8 +63,11 @@ class PetFamiliars:
     def pet_my_familiars(self):
         if not self.bestiary_breakdown:
             self.get_bestiary()
-        self.taming_results = [self.pet_one_familiar(beast["id"])
-                               for beast in self.bestiary_breakdown["taming"]]
+        for beast in self.bestiary_breakdown["taming"]:
+            self.echo("-- petting " + beast["name"])
+            result = self.pet_one_familiar(beast["id"])
+            self.taming_results.append(result)
+            self.echo(" -- message: " + result["msg"], True)
         self.__breakdown_taming_results()
 
     def __breakdown_taming_results(self):
@@ -119,9 +128,9 @@ class PetFamiliars:
         return result
 
     def __equip_familiar(self, b_id):
+        self.echo(" -- equipping familiar")
         url = 'http://flightrising.com/includes/familiar_active.php?' \
               'id=' + str(dragon_id) + '&itm=' + str(b_id)
-        # must have User-Agent set
         return MyCurl.curl(url, self.send_headers)
 
     def __parse_response(self, html):
