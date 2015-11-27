@@ -23,33 +23,59 @@ class PetFamiliars:
     loyalty_patt = re.compile(r'Your (?P<beast>.+) is (?P<loyalty>\w+) '
                               r'and wants to learn more about your clan\.')
 
-    def __init__(self, fr_cookie=None):
+    bestiary = []
+    awakened = []
+    locked = []
+    taming = []
+
+    def __init__(self, bestiary_list=None, fr_cookie=None, get_pages=1):
         self.fr_cookie = fr_cookie or my_fr_cookie
+        self.__get_pages = get_pages
+        self.bestiary = bestiary_list or []  # self.get_bestiary()
         pass
 
     def get_bestiary(self, pages=None):
-        get_pages = pages or 1
-        self.bestiary_dict = Bestiary(pages=get_pages, fr_cookie=my_fr_cookie).get_all()
-        return self.bestiary_dict
+        get_pages = pages or self.__get_pages
+        if not self.bestiary:
+            self.bestiary = Bestiary(
+                pages=get_pages, fr_cookie=my_fr_cookie).get_list()
+        return self.bestiary
+
+    def breakdown_bestiary(self):
+        for beast in self.bestiary:
+            loyalty = beast["loyalty"].lower()
+            if loyalty == "awakened":
+                self.awakened.append(beast)
+            elif loyalty == "locked":
+                self.locked.append(beast)
+            else:
+                self.taming.append(beast)
+        if len(self.bestiary) != \
+                (len(self.locked) + len(self.awakened) + len(self.taming)):
+            sys.stderr.write("Error!  Not adding up correctly!")
+
+    def print_bestiary_breakdown(self):
+        if not self.awakened or self.locked or self.taming:
+            if not self.bestiary:
+                self.get_bestiary()
+            self.breakdown_bestiary()
+
+        # print stats
+        print "locked: ", len(self.locked), " -", self.locked
+        print "awakened: ", len(self.awakened)
+        print "taming: ", len(self.taming)
+        print "total =", len(self.bestiary)
+        print
 
     def main(self):
         # read in bestiary file, sort dict by non-awakened, and non-locked
         with open('bestiary_dict.py') as bestiary_file:
             bestiary = eval(bestiary_file.read())
         print bestiary
-        if type(bestiary) is dict:
-            awakened = [bestiary[b_id] for b_id in bestiary
-                        if bestiary[b_id]["loyalty"].lower() == "awakened"]
-            locked = [bestiary[b_id]["name"] for b_id in bestiary
-                      if bestiary[b_id]["loyalty"].lower() == "locked"]
-            taming = [bestiary[b_id] for b_id in bestiary
-                      if bestiary[b_id]["loyalty"].lower()
-                      not in ("locked", "awakened")]
-        else:  # is of newer type list :)
-            awakened = [b for b in bestiary if b["loyalty"].lower() == "awakened"]
-            locked = [b for b in bestiary if b["loyalty"].lower() == "locked"]
-            taming = [b for b in bestiary if b["loyalty"].lower()
-                      not in ("locked", "awakened")]
+        awakened = [b for b in bestiary if b["loyalty"].lower() == "awakened"]
+        locked = [b for b in bestiary if b["loyalty"].lower() == "locked"]
+        taming = [b for b in bestiary if b["loyalty"].lower()
+                  not in ("locked", "awakened")]
 
         # print stats
         print "locked: ", len(locked), " -", locked

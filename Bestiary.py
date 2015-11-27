@@ -31,7 +31,7 @@ class Bestiary:
         self.pages = pages or 43
         self.fr_cookie = fr_cookie or my_fr_cookie
 
-    def get_all(self):
+    def get_list(self):
         """Curl and then parse all bestiary pages, returning results.
 
         :return: list of dicts, of all beasts
