@@ -1,0 +1,122 @@
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=1 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=2 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=3 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=4 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=5 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=6 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=7 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=8 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=9 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=10 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=11 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=12 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=13 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=14 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=15 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=16 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=17 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=18 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=19 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=20 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=21 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=22 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=23 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=24 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=25 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=26 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=27 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=28 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=29 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=30 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=31 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=32 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=33 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=34 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=35 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=36 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=37 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=38 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=39 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=40 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=41 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=42 -- parsing
+curling http://flightrising.com/main.php?p=bestiary&tab=familiars&page=43 -- parsing
+-- petting Almandine Sturgeon -- message: already bonded
+-- petting Amber Gulper -- message: already bonded
+-- petting Apatite Fisher -- message: already bonded
+-- petting Arctic Hippalectryon -- equipping familiar -- message: already bonded
+-- petting Bamboo Phytocat -- message: already bonded
+-- petting Blue Vein Pansy -- equipping familiar -- message: rewards
+-- petting Brush Dodo -- message: rewards
+-- petting Bumble -- message: rewards
+-- petting Cardinal Hippogriff -- message: rewards
+-- petting Centaur Archer -- equipping familiar -- message: rewards
+-- petting Chalcedony Snipper -- message: rewards
+-- petting Chromefeather Lookout -- message: rewards
+-- petting Clearwater Oracle -- equipping familiar -- message: rewards
+-- petting Coral Carpenter -- message: rewards
+-- petting Corpse Cleaner -- message: rewards
+-- petting Corundum Chameleon -- message: rewards
+-- petting Crystalplate Stinger -- equipping familiar -- message: rewards
+-- petting Deadland Disciple -- message: rewards
+-- petting Deadwood Boar -- equipping familiar -- message: rewards
+-- petting Depin -- message: rewards
+-- petting Dreameater -- message: rewards
+-- petting Dryad -- message: already bonded
+-- petting Ectoplasmime -- equipping familiar -- message: rewards
+-- petting Everglade Lasher -- message: rewards
+-- petting Extinguished Jackalope -- equipping familiar -- message: rewards
+-- petting Fuiran -- message: rewards
+-- petting Fungalhoof Qiriq -- message: rewards
+-- petting Gale Wolf -- message: already bonded
+-- petting Granite Guardian -- equipping familiar -- message: rewards
+-- petting Greater Sandstrike -- message: rewards
+-- petting Harvest Floracat -- message: rewards
+-- petting Hippalectryon -- equipping familiar -- message: rewards
+-- petting Hydra Scorpion -- message: rewards
+-- petting Jawlocker -- equipping familiar -- message: rewards
+-- petting Juvenile Starsweeper -- message: rewards
+-- petting King Parda -- message: already bonded
+-- petting Lesser Wisp -- message: rewards
+-- petting Mantled Foo -- message: rewards
+-- petting Maren Warlock -- equipping familiar -- message: rewards
+-- petting Mistwatch Shellion -- message: rewards
+-- petting Molten Marauder -- message: rewards
+-- petting Moonbeam Crayfish -- equipping familiar -- message: rewards
+-- petting Nature Sprite -- message: rewards
+-- petting Nephrite Chameleon -- equipping familiar -- message: rewards
+-- petting Nightsky Fuiran -- message: rewards
+-- petting Painted Centaur -- message: rewards
+-- petting Poultrygeist -- message: rewards
+-- petting Ragamouse -- equipping familiar -- message: not equipped
+-- petting Rainbow Sprite -- message: rewards
+-- petting Rhodochrosite Crane -- message: rewards
+-- petting Scarlet Flycatcher -- message: rewards
+-- petting Scrapmetal Tracker -- equipping familiar -- message: rewards
+-- petting Scythe Kamaitachi -- message: rewards
+-- petting Searing Jackalope -- equipping familiar -- message: rewards
+-- petting Sentinel Mith -- equipping familiar -- message: rewards
+-- petting Sentry Squawker -- message: rewards
+-- petting Serthis Potionmaster -- equipping familiar -- message: rewards
+-- petting Shattered Serpent -- message: rewards
+-- petting Smoke Gyre -- message: already bonded
+-- petting Snarling Mimic -- equipping familiar -- message: rewards
+-- petting Snowsquall Floracat -- message: rewards
+-- petting Sparkling Stinger -- equipping familiar -- message: rewards
+-- petting Spellbound Golem -- message: rewards
+-- petting Stardust Scholar -- message: rewards
+-- petting Stonewatch Prince -- equipping familiar -- message: rewards
+-- petting Tigerblood Foo -- message: rewards
+-- petting Trick of the Light -- message: rewards
+-- petting Ultramel Amphithere -- equipping familiar -- message: rewards
+-- petting Umberhorn Qiriq -- message: rewards
+-- petting Windcarve Fugitive -- equipping familiar -- message: rewards
+-- petting Wintermane Spearman -- equipping familiar -- message: rewards
+-- petting Woodland Turkey -- equipping familiar -- message: rewards
+-- petting Zalis -- message: rewards
+gold_chests: 1
+iron_chests: 1
+rusted_chests: 3
+failed: 9 - [{'msg': 'already bonded'}, {'msg': 'already bonded'}, {'msg': 'already bonded'}, {'msg': 'already bonded'}, {'msg': 'already bonded'}, {'msg': 'already bonded'}, {'msg': 'already bonded'}, {'msg': 'already bonded'}, {'msg': 'already bonded'}]
+
+Process finished with exit code 0
