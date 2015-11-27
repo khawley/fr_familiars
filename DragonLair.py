@@ -16,8 +16,10 @@ class DragonLair:
                                  r'(?:&|&amp;)tab=dragon(?:&|&amp;)'
                                  r'did=(?P<dragon_id>\d+)')
     familiar_equipped_patt = re.comiple(r'/images/icons/famicon.png')
+    familiar_img_patt = re.compile(r'familiar\/(?:\w+)\/(?P<familiar_id>\d+)\.png')
 
     lair_max_page = 1
+    dragons = []
 
     def __init__(self, lair_id, fr_cookie, verbose=False):
         """
@@ -77,18 +79,37 @@ class DragonLair:
             sys.stderr.write("Error: Something happened, did not find 15 dragons on page")
 
         for dragon_card in dragon_cards:
+            result = {}
+
             a_tag = dragon_card.find("a")
             match = re.search(self.dragon_url_patt, a_tag.attrs["href"])
             if match:
-                dragon_id = match.group("dragon_id")
+                result["dragon_id"] = match.group("dragon_id")
 
-            if dragon_card.selector(".loginbar")[0]\
-                .find(self.__locate_familiar_equipped_img()):
-                has_familiar = True
+            if result["dragon_id"] \
+                    and dragon_card.selector(".loginbar")[0].find(
+                    self.__locate_familiar_equipped_img()):
+                result["familiar_id"] = self.__get_dragon_familiar_id(
+                    result["dragon_id"])
 
+            if result:
+                self.dragons.append(result)
 
+    def __get_dragon_familiar_id(self, dragon_id):
+        dragon_html = MyCurl.curl(self.dragon_url + str(dragon_id),
+                                  self.send_headers)
+        return self.__parse_dragon_page(dragon_html)
 
-        pass
+    def __parse_dragon_page(self, html):
+        soup = BeautifulSoup(html, "html.parser").select("#super-container")[0]
+        for a_tag in soup.select("a.clueitem"):
+            img = a_tag.find("img")
+            if img:
+                match = re.search(self.familiar_img_patt, img.attrs["src"])
+                if match:
+                    return match.group("familiar_id")
+
+        return ""
 
     def __locate_familiar_equipped_img(self, tag):
         return tag.has_attr("src") and \
