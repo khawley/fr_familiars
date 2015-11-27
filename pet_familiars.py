@@ -53,17 +53,17 @@ class PetFamiliars:
             return
 
         gold_chests = []
-        iron_chests = 0
-        rusted_chests = 0
+        iron_chests = []
+        rusted_chests = []
         failures = []
         for result in self.taming_results:
-            if result["chest"]:
+            if result.get("chest", ""):
                 if result["chest"] == "gold":
                     gold_chests.append(result)
                 elif result["chest"] == "iron":
-                    iron_chests += 1
+                    iron_chests.append(result)
                 elif result["chest"] == "rusted":
-                    rusted_chests += 1
+                    rusted_chests.append(result)
 
             if result["msg"] != "rewards":
                 failures.append(result)
@@ -79,8 +79,11 @@ class PetFamiliars:
         if not self.taming_breakdown:
             self.__breakdown_taming_results()
 
-        print "gold_chests:", len(self.taming_breakdown["gold_chests"]),
-        print "-", self.taming_breakdown["gold_chests"]
+        if self.taming_breakdown["gold_chests"]:
+            print "gold_chests:", len(self.taming_breakdown["gold_chests"]),
+            print "-", self.taming_breakdown["gold_chests"]
+        else:
+            print "gold_chests: 0"
         print "iron_chests:", len(self.taming_breakdown["iron_chests"])
         print "rusted_chests:", len(self.taming_breakdown["rusted_chests"])
 
