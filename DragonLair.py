@@ -12,10 +12,12 @@ class DragonLair:
     """
 
     #regex globals
-    dragon_url_patt = re.compile(r'main\.php\?p=lair(?:&|&amp;)id=95470'
+    lair_url_patt = re.compile(r'main\.php\?p=lair(?:&|&amp;)id=(?:\d+)'
+                               r'(?:&|&amp;)page=(\d+)')
+    dragon_url_patt = re.compile(r'main\.php\?p=lair(?:&|&amp;)id=(?:\d+)'
                                  r'(?:&|&amp;)tab=dragon(?:&|&amp;)'
                                  r'did=(?P<dragon_id>\d+)')
-    familiar_equipped_patt = re.comiple(r'/images/icons/famicon.png')
+    familiar_equipped_patt = re.compile(r'\/images\/icons\/famicon\.png')
     familiar_img_patt = re.compile(r'familiar\/(?:\w+)\/'
                                    r'(?P<familiar_id>\d+)\.png')
 
