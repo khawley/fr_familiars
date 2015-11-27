@@ -39,7 +39,7 @@ class PetFamiliars:
             'Origin: http://flightrising.com',
             'Accept-Encoding: gzip, deflate',
             'Accept-Language: en-US,en;q=0.8',
-            'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.86 Safari/537.36',
+            'User-Agent: Mozilla/5.0 (Windows NT 6.1; Trident/7.0; rv:11.0) like Gecko',
             'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
             'Accept: */*',
             'X-Requested-With: XMLHttpRequest',
