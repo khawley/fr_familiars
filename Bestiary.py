@@ -24,8 +24,10 @@ class Bestiary:
         self.fr_cookie = fr_cookie or my_fr_cookie
 
     def get_all(self):
+        # must have User-Agent set
         send_headers = [
             'Accept-Language: en-US,en;q=0.8',
+            'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.86 Safari/537.36',
             'Upgrade-Insecure-Requests: 1',
             'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
             self.fr_cookie,
@@ -33,7 +35,7 @@ class Bestiary:
         for i in range(1,self.pages + 1):
             url = self.base_url + str(i)
             print "curling " + url,
-            html = MyCurl(url, send_headers).curl()
+            html = MyCurl.curl(url, send_headers)
             # html = open("bestiary_response.html")
             print " -- parsing"
             self.parse_html(html)
@@ -88,6 +90,7 @@ class Bestiary:
                 sys.stderr.write("Error: Parsed out id, but not name - " +
                                  HTMLParser().unescape(span.text))
 
+    @staticmethod
     def locate_beast_image(tag):
         """ Given a tag, see if it matches the specifications
 
