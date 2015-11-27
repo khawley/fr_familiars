@@ -4,8 +4,9 @@ import sys
 from bs4 import BeautifulSoup
 
 from MyCurl import MyCurl
+from Bestiary import Bestiary
 
-fr_cookie = 'Cookie: PHPSESSID=askldfjlkanfln; userid=alsdflanf; user_key=1234567890; username=test;'
+my_fr_cookie = 'Cookie: PHPSESSID=askldfjlkanfln; userid=alsdflanf; user_key=1234567890; username=test;'
 dragon_id = '11902870'
 
 
@@ -19,6 +20,16 @@ class PetFamiliars:
     chest_url_patt = re.compile(r'\/trinket\/(?P<chest_id>\d+)\.png')
     loyalty_patt = re.compile(r'Your (?P<beast>.+) is (?P<loyalty>\w+) and wants'
                               r' to learn more about your clan\.')
+
+    def __init__(self, fr_cookie=None):
+        self.fr_cookie = fr_cookie or my_fr_cookie
+        pass
+
+    def get_besiary(self, pages=None):
+        get_pages = pages or 1
+        self.bestiary_dict = Bestiary(pages=get_pages, fr_cookie=my_fr_cookie).get_all()
+        return self.bestiary_dict
+
     def main(self):
         # read in bestiary file, sort dict by non-awakened, and non-locked
         with open('bestiary_dict.py') as bestiary_file:
@@ -64,8 +75,7 @@ class PetFamiliars:
         if failures:
             print "failed:", len(failures), failures
 
-
-    def pet_beast(self.b_id):
+    def pet_beast(self, b_id):
         url = "http://flightrising.com/includes/ol/fam_bonding.php"
 
         # must have User-Agent set
@@ -90,7 +100,6 @@ class PetFamiliars:
                 sys.stderr.write("Error: Tried to equip familiar id " + str(b_id) +
                                  " but still failed to 'pet'")
         return result
-
 
     def parse_response(self, html):
         soup = BeautifulSoup(html, "html.parser")
@@ -121,7 +130,6 @@ class PetFamiliars:
                 result = self.parse_rewards(div)
                 break
         return result
-
 
     def parse_rewards(div):
         # match out loyalty level.
@@ -169,5 +177,6 @@ class PetFamiliars:
 
 
 # main()
-pet_beast(413)
+# pet_beast(413)
+print PetFamiliars().get_besiary(pages=1)
 # print parse_response(response)
