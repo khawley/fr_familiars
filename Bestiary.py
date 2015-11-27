@@ -6,9 +6,6 @@ import re
 import sys
 from HTMLParser import HTMLParser
 
-my_fr_cookie = 'Cookie: PHPSESSID=askldfjlkanfln; userid=alsdflanf; ' \
-               'user_key=1234567890; username=test;'
-
 
 class Bestiary:
     """
@@ -23,15 +20,15 @@ class Bestiary:
     base_url = "http://flightrising.com/main.php?" \
                "p=bestiary&tab=familiars&page="
 
-    def __init__(self, pages=None, fr_cookie=None, verbose=False):
+    def __init__(self, fr_cookie, pages=None, verbose=False):
         """
-        :param int pages: Number of pages from 1 to 'pages' to parse
         :param string fr_cookie: Cookie that has login information
+        :param int pages: Number of pages from 1 to 'pages' to parse
         :param bool verbose: Print status statements
         :return:
         """
+        self.fr_cookie = fr_cookie
         self.pages = pages or 43
-        self.fr_cookie = fr_cookie or my_fr_cookie
         self.verbose = verbose
         # must have User-Agent set
         self.send_headers = [

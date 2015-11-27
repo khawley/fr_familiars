@@ -6,10 +6,6 @@ from bs4 import BeautifulSoup
 from MyCurl import MyCurl
 from Bestiary import Bestiary
 
-my_fr_cookie = 'Cookie: PHPSESSID=askldfjlkanfln; userid=alsdflanf; ' \
-               'user_key=1234567890; username=test;'
-dragon_id = '11902870'
-
 
 class PetFamiliars:
 
@@ -29,9 +25,11 @@ class PetFamiliars:
     taming_results = []
     taming_breakdown = {}
 
-    def __init__(self, bestiary_list=None, fr_cookie=None, get_pages=None, verbose=False):
+    def __init__(self, fr_cookie, equip_dragon=None,
+                 bestiary_list=None, get_pages=None, verbose=False):
+        self.fr_cookie = fr_cookie
         self.verbose = verbose
-        self.fr_cookie = fr_cookie or my_fr_cookie
+        self.equip_dragon = equip_dragon
         self.__get_pages = get_pages
         self.bestiary_breakdown = bestiary_list or []  # self.get_bestiary()
 
@@ -138,9 +136,15 @@ class PetFamiliars:
         return result
 
     def __equip_familiar(self, b_id):
+        if not self.equip_dragon:
+            self.echo(" -- not equipping, not default dragon")
+            return {
+                "msg": "not equipped",
+                "beast": b_id
+            }
         self.echo(" -- equipping familiar")
         url = 'http://flightrising.com/includes/familiar_active.php?' \
-              'id=' + str(dragon_id) + '&itm=' + str(b_id)
+              'id=' + str(self.equip_dragon) + '&itm=' + str(b_id)
         return MyCurl.curl(url, self.send_headers)
 
     def __parse_response(self, html):
@@ -203,8 +207,3 @@ class PetFamiliars:
             result["loyalty"] = match.group("loyalty")
 
         return result
-
-pf = PetFamiliars(verbose=True)
-pf.get_bestiary()
-pf.pet_my_familiars()
-pf.print_taming_breakdown()
