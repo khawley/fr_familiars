@@ -70,13 +70,14 @@ class DragonLair:
 
     def __parse_lair_page(self, html):
 
-        soup = BeautifulSoup(html, "html.parser").select("#super-container")[0]
+        soup = BeautifulSoup(html, "html.parser")
 
         if self.lair_max_page == 1:
             # may not have been set, go find it in the page
-            self.lair_max_page = max([int(i) for i in
-                                      re.findall(r'(\d+)',
-                                                 soup.find_all("div")[4].text)])
+            paging_tags = soup.find_all(
+                self.__locate_lair_paging_urls)
+            self.lair_max_page = max([int(i.text) for i in paging_tags
+                                      if i.text])
 
         dragon_cards = soup.select(".dragoncard")
 
@@ -94,8 +95,9 @@ class DragonLair:
                           str(result["dragon_id"]), True)
 
             if result["dragon_id"] \
-                    and dragon_card.selector(".loginbar")[0].find(
-                    self.__locate_familiar_equipped_img()):
+                    and dragon_card.find(".loginbar") \
+                    and dragon_card.find(".loginbar").parent.find(
+                        self.__locate_familiar_equipped_img()):
                 result["familiar_id"] = self.__get_dragon_familiar_id(
                     result["dragon_id"])
 
@@ -121,6 +123,10 @@ class DragonLair:
                     return match.group("familiar_id")
 
         return ""
+
+    def __locate_lair_paging_urls(self, tag):
+        return tag.has_attr("href") and \
+               re.search(self.lair_url_patt, tag.attrs["href"])
 
     def __locate_familiar_equipped_img(self, tag):
         return tag.has_attr("src") and \
