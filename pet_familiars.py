@@ -27,7 +27,7 @@ class PetFamiliars:
         self.fr_cookie = fr_cookie or my_fr_cookie
         pass
 
-    def get_besiary(self, pages=None):
+    def get_bestiary(self, pages=None):
         get_pages = pages or 1
         self.bestiary_dict = Bestiary(pages=get_pages, fr_cookie=my_fr_cookie).get_all()
         return self.bestiary_dict
