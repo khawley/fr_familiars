@@ -68,7 +68,7 @@ class Bestiary:
         self.echo(" -- parsing", True)
         self.__parse_html(html)
 
-    def get_on_page(self, page):
+    def get_one_page(self, page):
         self.__get_page(page)
         self.__breakdown_beasts()
         return self.beasts_breakdown
