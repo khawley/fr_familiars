@@ -107,15 +107,32 @@ class PetFamiliars:
         ]
 
         # for id in ids:
-        result = self.__parse_response(MyCurl.curl(url, send_headers, {"id": b_id}))
+        result = self.__parse_response(
+            MyCurl.curl(url, send_headers, {"id": b_id}))
 
         if result["msg"] == "not equipped":
-            url = 'http://flightrising.com/includes/familiar_active.php?id=' + str(dragon_id) + '&itm=' + str(b_id)
-            result = self.__parse_response(MyCurl.curl(url, send_headers))
+            self.__equip_familiar(b_id)
+            result = self.pet_beast(b_id)
             if result["msg"] == "not_equipped":
                 sys.stderr.write("Error: Tried to equip familiar id " + str(b_id) +
                                  " but still failed to 'pet'")
         return result
+
+    def __equip_familiar(self, b_id):
+        url = 'http://flightrising.com/includes/familiar_active.php?' \
+              'id=' + str(dragon_id) + '&itm=' + str(b_id)
+        # must have User-Agent set
+        send_headers = [
+            self.fr_cookie,
+            'Origin: http://flightrising.com',
+            'Accept-Encoding: gzip, deflate',
+            'Accept-Language: en-US,en;q=0.8',
+            'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.86 Safari/537.36',
+            'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+            'Accept: */*',
+            'X-Requested-With: XMLHttpRequest',
+        ]
+        return MyCurl.curl(url, send_headers)
 
     def __parse_response(self, html):
         soup = BeautifulSoup(html, "html.parser")
