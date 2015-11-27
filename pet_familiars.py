@@ -124,11 +124,9 @@ class PetFamiliars:
         return MyCurl.curl(url, self.send_headers)
 
     def __parse_response(self, html):
-        soup = BeautifulSoup(html, "html.parser")
-        divs = soup.find_all("div")
         result = {}
 
-        for div in divs:
+        for div in BeautifulSoup(html, "html.parser").find_all("div"):
 
             # is already bonded?
             match = re.search(self.bonded_patt, div.text)
@@ -154,14 +152,6 @@ class PetFamiliars:
         return result
 
     def __parse_rewards(self, div):
-        # match out loyalty level.
-        # match out the gold
-        # match out chests
-
-        beast = ""
-        gold = ""
-        chest = ""
-        loyalty = ""
         result = {
             "msg": "rewards"
         }
@@ -186,6 +176,7 @@ class PetFamiliars:
                     result["chest"] = "rusted"
                 else:
                     result["chest"] = "??"
+
         match = re.search(self.loyalty_patt, div.text)
         if match:
             result["beast"] = match.group("beast")
