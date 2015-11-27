@@ -94,12 +94,13 @@ class DragonLair:
                 self.echo("-- found dragon_id: " +
                           str(result["dragon_id"]), True)
 
-            if result["dragon_id"] \
-                    and dragon_card.find(".loginbar") \
-                    and dragon_card.find(".loginbar").parent.find(
-                        self.__locate_familiar_equipped_img()):
-                result["familiar_id"] = self.__get_dragon_familiar_id(
-                    result["dragon_id"])
+            loginbars = dragon_card.select(".loginbar")
+            if result["dragon_id"] and loginbars:
+                for tag in loginbars:
+                    if not result.get("familiar_id") and \
+                            tag.find(self.__locate_familiar_equipped_img):
+                        result["familiar_id"] = self.__get_dragon_familiar_id(
+                            result["dragon_id"])
 
             if result:
                 self.dragons.append(result)
@@ -114,7 +115,7 @@ class DragonLair:
         return fam_id
 
     def __parse_dragon_page(self, html):
-        soup = BeautifulSoup(html, "html.parser").select("#super-container")[0]
+        soup = BeautifulSoup(html, "html.parser")
         for a_tag in soup.select("a.clueitem"):
             img = a_tag.find("img")
             if img:
