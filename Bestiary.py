@@ -19,6 +19,7 @@ class Bestiary:
                            r'(?P<description>(?:\n|.)*)\n$', re.UNICODE)
     loyalty_patt = re.compile(r'^(?P<loyalty>[\w]+)$')
     beasts = []
+    beasts_breakdown = {}
     base_url = "http://flightrising.com/main.php?" \
                "p=bestiary&tab=familiars&page="
 
@@ -52,7 +53,58 @@ class Bestiary:
             # html = open("bestiary_response.html")
             print " -- parsing"
             self.__parse_html(html)
-        return self.beasts
+        self.__breakdown_beasts()
+        return self.beasts_breakdown
+
+    def __breakdown_beasts(self):
+        """Using self.beasts, determine awakened, locked, & taming.
+        Write to self.beasts_breakdown.
+
+        :return:
+        """
+        if not self.beasts:
+            sys.stderr.write("Error: No bestiary to breakdown")
+            return
+
+        awakened = []
+        locked = []
+        taming = []
+
+        for beast in self.beasts:
+            loyalty = beast["loyalty"].lower()
+            if loyalty == "awakened":
+                awakened.append(beast)
+            elif loyalty == "locked":
+                locked.append(beast)
+            else:
+                taming.append(beast)
+
+        if len(self.beasts) != \
+                (len(locked) + len(awakened) + len(taming)):
+            sys.stderr.write("Error!  Not adding up correctly!")
+
+        self.beasts_breakdown = {
+            "bestiary": self.beasts,
+            "awakened": awakened,
+            "locked": locked,
+            "taming": taming
+        }
+
+    def print_beasts_breakdown(self):
+        """Print the breakdown of awakened, locked, taming & total.
+
+        :return:
+        """
+        if not self.beasts:
+            self.get_list()
+
+        # print stats
+        print "locked: ", len(self.beasts_breakdown["locked"]),
+        print " -", self.beasts_breakdown["locked"]
+        print "awakened: ", len(self.beasts_breakdown["awakened"])
+        print "taming: ", len(self.beasts_breakdown["taming"])
+        print "total =", len(self.beasts)
+        print
 
     def __parse_html(self, html):
         """
@@ -72,7 +124,7 @@ class Bestiary:
             beast_id = None
             name = ""
             loyalty = ""
-            src= ""
+            src = ""
 
             # loop through the divs of the span, which could have:
             # img w/ id, name, description, status images, loyalty text

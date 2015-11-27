@@ -33,7 +33,6 @@ class PetFamiliars:
         self.fr_cookie = fr_cookie or my_fr_cookie
         self.__get_pages = get_pages
         self.bestiary = bestiary_list or []  # self.get_bestiary()
-        pass
 
     def get_bestiary(self, pages=None):
         get_pages = pages or self.__get_pages
@@ -42,47 +41,6 @@ class PetFamiliars:
                 pages=get_pages, fr_cookie=my_fr_cookie).get_list()
         self.__breakdown_bestiary()
         return self.bestiary
-
-    def __breakdown_bestiary(self):
-        if not self.bestiary:
-            sys.stderr.write("Error: No bestiary to breakdown")
-            return
-
-        awakened = []
-        locked = []
-        taming = []
-
-        for beast in self.bestiary:
-            loyalty = beast["loyalty"].lower()
-            if loyalty == "awakened":
-                awakened.append(beast)
-            elif loyalty == "locked":
-                locked.append(beast)
-            else:
-                taming.append(beast)
-
-        if len(self.bestiary) != \
-                (len(locked) + len(awakened) + len(taming)):
-            sys.stderr.write("Error!  Not adding up correctly!")
-
-        self.bestiary_breakdown = {
-            "awakened": awakened,
-            "locked": locked,
-            "taming": taming
-        }
-        self.to_tame = taming
-
-    def print_bestiary_breakdown(self):
-        if not self.bestiary:
-            self.get_bestiary()
-
-        # print stats
-        print "locked: ", len(self.bestiary_breakdown["locked"]),
-        print " -", self.bestiary_breakdown["locked"]
-        print "awakened: ", len(self.bestiary_breakdown["awakened"])
-        print "taming: ", len(self.bestiary_breakdown["taming"])
-        print "total =", len(self.bestiary)
-        print
 
     def pet_all_beasts(self):
         if not self.bestiary:
