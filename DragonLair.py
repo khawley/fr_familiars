@@ -16,7 +16,8 @@ class DragonLair:
                                  r'(?:&|&amp;)tab=dragon(?:&|&amp;)'
                                  r'did=(?P<dragon_id>\d+)')
     familiar_equipped_patt = re.comiple(r'/images/icons/famicon.png')
-    familiar_img_patt = re.compile(r'familiar\/(?:\w+)\/(?P<familiar_id>\d+)\.png')
+    familiar_img_patt = re.compile(r'familiar\/(?:\w+)\/'
+                                   r'(?P<familiar_id>\d+)\.png')
 
     lair_max_page = 1
     dragons = []
