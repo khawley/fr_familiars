@@ -68,15 +68,19 @@ def main():
 def pet_beast(b_id):
     # ids = get_ids(beasts)
     url = "http://flightrising.com/includes/ol/fam_bonding.php"
+
+    # must have User-Agent set
     send_headers = [
         fr_cookie,
         'Origin: http://flightrising.com',
         'Accept-Encoding: gzip, deflate',
         'Accept-Language: en-US,en;q=0.8',
+        'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.86 Safari/537.36',
         'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
         'Accept: */*',
         'X-Requested-With: XMLHttpRequest',
     ]
+
     # for id in ids:
     result = parse_response(MyCurl.curl(url, send_headers, {"id": b_id}))
 
