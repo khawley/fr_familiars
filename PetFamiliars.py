@@ -227,8 +227,9 @@ class PetFamiliars:
         :param string dragon_id: dragon id to remove familiar from
         :return:
         """
-        self.echo("~ inequiping dragon:" + str(dragon_id), True)
-        url = "http://flightrising.com/includes/familiar_active.php?id=" + str(dragon_id) + "&itm=0"
+        self.echo("~ unequipping dragon:" + str(dragon_id), True)
+        url = "http://flightrising.com/includes/familiar_active.php?id=" + \
+              str(dragon_id) + "&itm=0"
         MyCurl.curl(url, self.send_headers)
 
     def __parse_response_familiar_bonding(self, html):
