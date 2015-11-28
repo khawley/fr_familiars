@@ -27,11 +27,10 @@ class PetFamiliars:
 
     def __init__(self, fr_cookie, equip_dragon=None,
                  bestiary_breakdown=None, dragon_list=None,
-                 get_pages=None, pet_awakened=False, verbose=False):
+                 pet_awakened=False, verbose=False):
         self.fr_cookie = fr_cookie
         self.verbose = verbose
         self.equip_dragon = equip_dragon
-        self.__get_pages = get_pages
         self.pet_awakened = pet_awakened
         self.bestiary_breakdown = bestiary_breakdown or {}
         self.dragons = dragon_list or []
@@ -48,21 +47,22 @@ class PetFamiliars:
         ]
 
     def echo(self, msg, newline=False):
+        """If verbose, print the msg.
+
+        :param string msg: String to be printed
+        :param bool newline: Whether to add a newline after msg
+        :return:
+        """
         if newline:
             msg += "\n"
         if self.verbose:
             sys.stdout.write(msg)
 
-    def get_bestiary(self, pages=None):
-        get_pages = pages or self.__get_pages
-        if not self.bestiary_breakdown:
-            self.bestiary_breakdown = Bestiary(
-                pages=get_pages, fr_cookie=self.fr_cookie, verbose=self.verbose).get_list()
-        return self.bestiary_breakdown
-
     def pet_my_familiars(self):
         if not self.bestiary_breakdown:
-            self.get_bestiary()
+            sys.stderr.write("Error: Please set bestiary_breakdown\n")
+            return
+
         beasts_to_pet = self.bestiary_breakdown["taming"]
 
         if self.pet_awakened:
