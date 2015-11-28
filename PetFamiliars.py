@@ -72,12 +72,12 @@ class PetFamiliars:
             self.echo("-- petting " + beast["name"])
             result = self.pet_one_familiar(beast["id"])
             if result["msg"] == "not equipped":
-                self.__equip_familiar(beast["id"])
-                result = self.pet_one_familiar(beast["id"])
-                if result["msg"] == "not equipped":
-                    sys.stderr.write("Error: Tried to equip familiar '"
-                                     + str(beast["name"]) +
-                                     "' but still failed to 'pet'")
+                if self.__equip_familiar(beast["id"]):
+                    result = self.pet_one_familiar(beast["id"])
+                    if result["msg"] == "not equipped":
+                        sys.stderr.write("Error: Tried to equip familiar '" +
+                                         str(beast["name"]) +
+                                         "' but still failed to 'pet'")
 
             # add in id + name here, else results are unknown
             result["id"] = beast["id"]
@@ -156,20 +156,16 @@ class PetFamiliars:
         return result
 
     def __equip_familiar(self, b_id):
-        if not self.equip_dragon and not self.dragons_to_equip:
-            self.echo(" -- not equipping, no default dragon")
-            return {
-                "msg": "not equipped",
-                "beast": b_id
-            }
-
-        # if list of waiting dragons, pull from them first, else use default
+        # if list of waiting dragons, pull from them first, then use default
         if self.dragons_to_equip:
             self.echo(" ~ equipping to dragon from list")
             dragon_id = self.dragons_to_equip.pop()
-        else:
+        elif self.equip_dragon:
             self.echo(" ~ equipping to default")
             dragon_id = self.equip_dragon
+        else:
+            self.echo(" -- not equipping, no default dragon")
+            return False
 
         self.echo(" ~ equipping familiar")
         url = 'http://flightrising.com/includes/familiar_active.php?' \
