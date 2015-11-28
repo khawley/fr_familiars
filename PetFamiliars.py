@@ -187,7 +187,7 @@ class PetFamiliars:
         :rtype: dict
         """
         url = "http://flightrising.com/includes/ol/fam_bonding.php"
-        result = self.__parse_response(
+        result = self.__parse_response_familiar_bonding(
             MyCurl.curl(url, self.send_headers, {"id": familiar_id}))
         if self.dragons and result.get("chest") == "gold":
             self.echo("~ returning familiar to hoard", True)
@@ -231,7 +231,7 @@ class PetFamiliars:
         url = "http://flightrising.com/includes/familiar_active.php?id=" + str(dragon_id) + "&itm=0"
         MyCurl.curl(url, self.send_headers)
 
-    def __parse_response(self, html):
+    def __parse_response_familiar_bonding(self, html):
         """
         Given html from 'pet familiar' curl, determine success/failure.
         If succes, parse out rewards.
