@@ -26,13 +26,13 @@ class PetFamiliars:
     taming_breakdown = {}
 
     def __init__(self, fr_cookie, equip_dragon=None,
-                 bestiary_list=None, dragon_list=None,
+                 bestiary_breakdown=None, dragon_list=None,
                  get_pages=None, verbose=False):
         self.fr_cookie = fr_cookie
         self.verbose = verbose
         self.equip_dragon = equip_dragon
         self.__get_pages = get_pages
-        self.bestiary_breakdown = bestiary_list or []  # self.get_bestiary()
+        self.bestiary_breakdown = bestiary_breakdown or {}
         self.dragons = dragon_list
 
         # must have User-Agent set
