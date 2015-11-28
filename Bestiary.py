@@ -53,8 +53,8 @@ class Bestiary:
     def get_all(self):
         """Curl and then parse all bestiary pages, returning results.
 
-        :return: list of dicts, of all beasts
-        :rtype: list
+        :return: dict of lists, of all beasts
+        :rtype: dict
         """
 
         for i in range(1, self.pages + 1):
