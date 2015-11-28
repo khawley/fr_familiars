@@ -143,19 +143,37 @@ class PetFamiliars:
         url = "http://flightrising.com/includes/ol/fam_bonding.php"
         result = self.__parse_response(
             MyCurl.curl(url, self.send_headers, {"id": b_id}))
+        if self.dragons and result.get("chest") == "gold":
+            self.echo("~ returning familiar to hoard", True)
+            self.dragons_to_equip.append(self.__locate_dragon(b_id))
+            self.__unequip_dragons_familiar(self.dragons_to_equip[-1])
         return result
 
     def __equip_familiar(self, b_id):
-        if not self.equip_dragon:
-            self.echo(" -- not equipping, not default dragon")
+        if not self.equip_dragon and not self.dragons_to_equip:
+            self.echo(" -- not equipping, no default dragon")
             return {
                 "msg": "not equipped",
                 "beast": b_id
             }
-        self.echo(" -- equipping familiar")
+
+        # if list of waiting dragons, pull from them first, else use default
+        if self.dragons_to_equip:
+            self.echo(" ~ equipping to dragon from list")
+            dragon_id = self.dragons_to_equip.pop()
+        else:
+            self.echo(" ~ equipping to default")
+            dragon_id = self.equip_dragon
+
+        self.echo(" ~ equipping familiar")
         url = 'http://flightrising.com/includes/familiar_active.php?' \
-              'id=' + str(self.equip_dragon) + '&itm=' + str(b_id)
+              'id=' + str(dragon_id) + '&itm=' + str(b_id)
         return MyCurl.curl(url, self.send_headers)
+
+    def __unequip_dragons_familiar(self, dragon_id):
+        self.echo("~ inequiping dragon:" + str(dragon_id), True)
+        url = "http://flightrising.com/includes/familiar_active.php?id=" + str(dragon_id) + "&itm=0"
+        MyCurl.curl(url, self.send_headers)
 
     def __parse_response(self, html):
         result = {}
@@ -217,3 +235,8 @@ class PetFamiliars:
             result["loyalty"] = match.group("loyalty")
 
         return result
+
+    def __locate_dragon(self, familiar_id):
+        for d in self.dragons:
+            if d["familiar_id"] == familiar_id:
+                return d["dragon_id"]
