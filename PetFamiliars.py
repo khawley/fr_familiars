@@ -233,12 +233,16 @@ class PetFamiliars:
 
         match = re.search(self.loyalty_patt, div.text)
         if match:
-            result["beast"] = match.group("beast")
+            # added through parent function
+            # result["beast"] = match.group("beast")
             result["loyalty"] = match.group("loyalty")
 
         return result
 
     def __locate_dragon(self, familiar_id):
+        if not self.dragons:
+            return ""
         for d in self.dragons:
             if d["familiar_id"] == familiar_id:
                 return d["dragon_id"]
+        return ""
