@@ -27,7 +27,7 @@ class MyCurl:
             # and data to send in request body.
             c.setopt(c.POSTFIELDS, postfields)
         c.setopt(c.WRITEDATA, response_buffer)
-        # c.setopt(c.HEADERFUNCTION, cls.__header_function)
+        c.setopt(c.HEADERFUNCTION, cls.__header_function)
         if verbose:
             c.setopt(c.VERBOSE, True)
         c.perform()
@@ -40,13 +40,14 @@ class MyCurl:
             if match:
                 encoding = match.group(1)
         else:
-            encoding = 'utf-8'
+            encoding = 'iso-8859-1'
 
         body = response_buffer.getvalue()
         # Decode using the encoding we figured out.
         return body.decode(encoding)
 
-    def __header_function(self, header_line):
+    @classmethod
+    def __header_function(cls, header_line):
         # Header lines include the first status line (HTTP/1.x ...).
         # We are going to ignore all lines that don't have a colon in them.
         # This will botch headers that are split on multiple lines...
@@ -67,4 +68,4 @@ class MyCurl:
         name = name.lower()
 
         # Now we can actually record the header name and value.
-        self.headers[name] = value
+        cls.headers[name] = value
