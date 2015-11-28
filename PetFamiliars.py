@@ -17,6 +17,7 @@ class PetFamiliars:
     chest_url_patt = re.compile(r'\/trinket\/(?P<chest_id>\d+)\.png')
     loyalty_patt = re.compile(r'Your (?P<beast>.+) is (?P<loyalty>\w+) '
                               r'and wants to learn more about your clan\.')
+    dragons_to_equip = []
 
     send_headers = []
     bestiary_breakdown = {}
@@ -25,18 +26,19 @@ class PetFamiliars:
     taming_breakdown = {}
 
     def __init__(self, fr_cookie, equip_dragon=None,
-                 bestiary_list=None, get_pages=None, verbose=False):
+                 bestiary_list=None, dragon_list=None,
+                 get_pages=None, verbose=False):
         self.fr_cookie = fr_cookie
         self.verbose = verbose
         self.equip_dragon = equip_dragon
         self.__get_pages = get_pages
         self.bestiary_breakdown = bestiary_list or []  # self.get_bestiary()
+        self.dragons = dragon_list
 
         # must have User-Agent set
         self.send_headers = [
             self.fr_cookie,
             'Origin: http://flightrising.com',
-            'Accept-Encoding: gzip, deflate',
             'Accept-Language: en-US,en;q=0.8',
             'User-Agent: Mozilla/5.0 (Windows NT 6.1; Trident/7.0; rv:11.0) like Gecko',
             'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
