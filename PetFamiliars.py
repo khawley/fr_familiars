@@ -179,17 +179,29 @@ class PetFamiliars:
             print "failed:", len(self.taming_breakdown["failures"]),
             print "-", self.taming_breakdown["failures"]
 
-    def pet_one_familiar(self, b_id):
+    def pet_one_familiar(self, familiar_id):
+        """
+        Pet familiar of id passed in and return results
+        :param string familiar_id: familiar id to pet
+        :return: results = { "msg": "...",
+        :rtype: dict
+        """
         url = "http://flightrising.com/includes/ol/fam_bonding.php"
         result = self.__parse_response(
-            MyCurl.curl(url, self.send_headers, {"id": b_id}))
+            MyCurl.curl(url, self.send_headers, {"id": familiar_id}))
         if self.dragons and result.get("chest") == "gold":
             self.echo("~ returning familiar to hoard", True)
-            self.dragons_to_equip.append(self.__locate_dragon(b_id))
+            self.dragons_to_equip.append(self.__locate_dragon(familiar_id))
             self.__unequip_dragons_familiar(self.dragons_to_equip[-1])
         return result
 
-    def __equip_familiar(self, b_id):
+    def __equip_familiar(self, familiar_id):
+        """
+        Equip the f_id to a dragon in dragons_to_equip or the default
+        equip_dragon.  If neither, return False.
+        :param string familiar_id: familiar id to equip to dragon
+        :return:
+        """
         # if list of waiting dragons, pull from them first, then use default
         if self.dragons_to_equip:
             self.echo(" ~ equipping to dragon from list")
@@ -203,7 +215,7 @@ class PetFamiliars:
 
         self.echo(" ~ equipping familiar")
         url = 'http://flightrising.com/includes/familiar_active.php?' \
-              'id=' + str(dragon_id) + '&itm=' + str(b_id)
+              'id=' + str(dragon_id) + '&itm=' + str(familiar_id)
         return MyCurl.curl(url, self.send_headers)
 
     def __unequip_dragons_familiar(self, dragon_id):
