@@ -39,6 +39,12 @@ class Bestiary:
         ]
 
     def echo(self, msg, newline=False):
+        """If verbose, print the msg.
+
+        :param string msg: String to be printed
+        :param bool newline: Whether to add a newline after msg
+        :return:
+        """
         if newline:
             msg += "\n"
         if self.verbose:
@@ -57,6 +63,11 @@ class Bestiary:
         return self.beasts_breakdown
 
     def __get_page(self, page):
+        """
+        Internal function to get & parse the html from one page of the Bestiary
+        :param int/string page:
+        :return:
+        """
         url = self.base_url + str(page)
         self.echo("curling " + url)
         html = MyCurl.curl(url, self.send_headers)
@@ -65,6 +76,13 @@ class Bestiary:
         self.__parse_html(html)
 
     def get_one_page(self, page):
+        """
+        Externally callable function to get one page of Bestiary and return
+        the beasts_breakdown of that page (and any previously crawled pages)
+        :param int/string page:
+        :return: beasts_breakdown
+        :rtype: dict of lists
+        """
         self.__get_page(page)
         self.__breakdown_beasts()
         return self.beasts_breakdown
