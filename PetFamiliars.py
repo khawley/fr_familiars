@@ -27,11 +27,12 @@ class PetFamiliars:
 
     def __init__(self, fr_cookie, equip_dragon=None,
                  bestiary_breakdown=None, dragon_list=None,
-                 get_pages=None, verbose=False):
+                 get_pages=None, pet_awakened=False, verbose=False):
         self.fr_cookie = fr_cookie
         self.verbose = verbose
         self.equip_dragon = equip_dragon
         self.__get_pages = get_pages
+        self.pet_awakened = pet_awakened
         self.bestiary_breakdown = bestiary_breakdown or {}
         self.dragons = dragon_list
 
@@ -62,7 +63,12 @@ class PetFamiliars:
     def pet_my_familiars(self):
         if not self.bestiary_breakdown:
             self.get_bestiary()
-        for beast in self.bestiary_breakdown["taming"]:
+        beasts_to_pet = self.bestiary_breakdown["taming"]
+
+        if self.pet_awakened:
+            beasts_to_pet += self.bestiary_breakdown["awakened"]
+
+        for beast in beasts_to_pet:
             self.echo("-- petting " + beast["name"])
             result = self.pet_one_familiar(beast["id"])
             if result["msg"] == "not equipped":
