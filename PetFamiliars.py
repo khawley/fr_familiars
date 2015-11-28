@@ -191,8 +191,10 @@ class PetFamiliars:
             MyCurl.curl(url, self.send_headers, {"id": familiar_id}))
         if self.dragons and result.get("chest") == "gold":
             self.echo("~ returning familiar to hoard", True)
-            self.dragons_to_equip.append(self.__locate_dragon(familiar_id))
-            self.__unequip_dragons_familiar(self.dragons_to_equip[-1])
+            dragon_id = self.__locate_dragon(familiar_id)
+            if dragon_id:
+                self.dragons_to_equip.append(dragon_id)
+                self.__unequip_dragons_familiar(dragon_id)
         return result
 
     def __equip_familiar(self, familiar_id):
