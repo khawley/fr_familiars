@@ -1,8 +1,8 @@
 """
- Rename this file to inputs.py, will not be saved in git
+ Copy this file to settings.py. It will not be saved in git
  fill in your settings like the examples below.
- the cookie can be copied from your web-browser,
- and may be or contain more fields longer than below
+ The cookie can be copied from your web-browser,
+ and may be longer or contain more fields than below
 """
 
 
@@ -42,9 +42,9 @@ DRAGON_LIST = []
 
 """
   Optional: you might store your bestiary list here. If you are switching
-    from Loyal to Awakened frequenly, this list should be updated.
+    from Loyal to Awakened frequently, this list should be updated.
   Example Code to get list:
     b = Bestiary(FR_COOKIE)
     BESTIARY_BREAKDOWN = b.get_all()
 """
-BESTIARY_BREAKDOWN = []
+BESTIARY_BREAKDOWN = {}
