@@ -123,7 +123,7 @@ class PetFamiliars:
             "rusted_chests": rusted_chests,
             "failures": failures,
             "total_gold": total_gold,
-            "total_sucesses": total_successes
+            "total_successes": total_successes
         }
 
     def print_taming_breakdown(self):
