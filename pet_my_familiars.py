@@ -3,7 +3,8 @@ from PetFamiliars import PetFamiliars
 from Bestiary import Bestiary
 
 try:
-    from settings import FR_COOKIE, DRAGON_ID, LAIR_ID
+    from settings import FR_COOKIE, DRAGON_ID, \
+        LAIR_ID, DRAGON_LIST, BESTIARY_BREAKDOWN
 except ImportError:
     sys.stderr.write("*ERROR: settings.py has not been configured.\n"
                      "        Please see settings_example.py for help.\n")

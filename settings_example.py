@@ -29,3 +29,22 @@ DRAGON_ID = ''
   Example: '0123456789'
 """
 LAIR_ID = ''
+
+"""
+  Optional: you might run Dragon Lair once and import the list here.
+    If you Lair changes frequently or you have many changes in familiars, then you may not wish to store your dragons.
+  Example Code to get list:
+    d = DragonLair(LAIR_ID, FR_COOKIE)
+    DRAGON_LIST = d.get_list()
+"""
+DRAGON_LIST = []
+
+
+"""
+  Optional: you might store your bestiary list here. If you are switching
+    from Loyal to Awakened frequenly, this list should be updated.
+  Example Code to get list:
+    b = Bestiary(FR_COOKIE)
+    BESTIARY_BREAKDOWN = b.get_list()
+"""
+BESTIARY_BREAKDOWN = []
