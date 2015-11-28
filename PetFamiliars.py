@@ -7,6 +7,11 @@ from Bestiary import Bestiary
 
 
 class PetFamiliars:
+    """
+    Class built to intake, and then pet all your familiars.  Specifically those
+    that are still in the process of 'taming' and have not yet been 'awakened',
+    but it can pet awakened too.  (as long they are not in the Vault)
+    """
 
     # regex globals, declared here to save on compile time
     bonded_patt = re.compile(r'You have already bonded with this '
@@ -17,6 +22,9 @@ class PetFamiliars:
     chest_url_patt = re.compile(r'\/trinket\/(?P<chest_id>\d+)\.png')
     loyalty_patt = re.compile(r'Your (?P<beast>.+) is (?P<loyalty>\w+) '
                               r'and wants to learn more about your clan\.')
+
+    # list of dragon_ids that had a familiar with gold chest that was removed,
+    # and are now waiting for a new familiar to be equipped
     dragons_to_equip = []
 
     send_headers = []
@@ -28,6 +36,19 @@ class PetFamiliars:
     def __init__(self, fr_cookie, equip_dragon=None,
                  bestiary_breakdown=None, dragon_list=None,
                  pet_awakened=False, verbose=False):
+        """
+        Setup class with initial variables
+        :param string fr_cookie: Login Cookie Header for FR
+            starts with "Cookie: ..."
+        :param int/string equip_dragon: default dragon_id to equip familiars in
+            hoard to
+        :param dict bestiary_breakdown: dict of lists from Bestiary class
+        :param list dragon_list: list from DragonLair class
+        :param bool pet_awakened: whether to also pet awakened familiars (must
+            be in Hoard, not Vault)
+        :param bool verbose: whether to print verbose progress statements
+        :return:
+        """
         self.fr_cookie = fr_cookie
         self.verbose = verbose
         self.equip_dragon = equip_dragon
@@ -59,6 +80,12 @@ class PetFamiliars:
             sys.stdout.write(msg)
 
     def pet_my_familiars(self):
+        """
+        Cycle through all beasts in besitary_breakdown["taming"] and, if pet_awakened is True, all the beasts in bestiary_breakdown["awakened"]
+        All results are parsed and appended to taming_results, then passed to
+        __breakdown_taming_results()
+        :return:
+        """
         if not self.bestiary_breakdown:
             sys.stderr.write("Error: Please set bestiary_breakdown\n")
             return
@@ -91,6 +118,11 @@ class PetFamiliars:
         self.__breakdown_taming_results()
 
     def __breakdown_taming_results(self):
+        """
+        Parse the results in taming_results for readability and consolidation.
+        This is then stored in taming_breakdown
+        :return:
+        """
         if not self.taming_results:
             sys.stderr.write("Error: No taming_results to breakdown")
             return
@@ -127,6 +159,10 @@ class PetFamiliars:
         }
 
     def print_taming_breakdown(self):
+        """
+        Pretty Print taming_breakdown
+        :return:
+        """
         if not self.taming_breakdown:
             self.__breakdown_taming_results()
 
@@ -173,11 +209,24 @@ class PetFamiliars:
         return MyCurl.curl(url, self.send_headers)
 
     def __unequip_dragons_familiar(self, dragon_id):
+        """
+        Using the dragon_id, remove the familiar, not replace it.  (Usually
+        result of a gold chest familiar)
+        :param string dragon_id: dragon id to remove familiar from
+        :return:
+        """
         self.echo("~ inequiping dragon:" + str(dragon_id), True)
         url = "http://flightrising.com/includes/familiar_active.php?id=" + str(dragon_id) + "&itm=0"
         MyCurl.curl(url, self.send_headers)
 
     def __parse_response(self, html):
+        """
+        Given html from 'pet familiar' curl, determine success/failure.
+        If succes, parse out rewards.
+        :param string html: body html from a curl response
+        :return: result = {"msg": "....", }
+        :rtype: dict
+        """
         result = {}
 
         for div in BeautifulSoup(html, "html.parser").find_all("div"):
@@ -206,6 +255,14 @@ class PetFamiliars:
         return result
 
     def __parse_rewards(self, div):
+        """
+        Given a div from BeautifulSoup and the familiar bonding response, parse
+        out the treasue, possible chests, and loyalty.
+        :param Tag div:
+        :return: result = { "msg": "rewards", "treasure": "...",
+            "loyalty": "...", ["chest": "..."]}
+        :rtype: dict
+        """
         result = {
             "msg": "rewards"
         }
@@ -240,6 +297,12 @@ class PetFamiliars:
         return result
 
     def __locate_dragon(self, familiar_id):
+        """
+        Find the dragon with familiar_id equipped.
+        :param string familiar_id: familiar id to locate in dragon list
+        :return: dragon_id
+        :rtype: string
+        """
         if not self.dragons:
             return ""
         for d in self.dragons:
