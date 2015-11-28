@@ -34,7 +34,7 @@ class PetFamiliars:
         self.__get_pages = get_pages
         self.pet_awakened = pet_awakened
         self.bestiary_breakdown = bestiary_breakdown or {}
-        self.dragons = dragon_list
+        self.dragons = dragon_list or []
 
         # must have User-Agent set
         self.send_headers = [
