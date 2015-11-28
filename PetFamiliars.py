@@ -99,8 +99,8 @@ class PetFamiliars:
         iron_chests = []
         rusted_chests = []
         failures = []
+        successes = []
         total_gold = 0
-        total_successes = 0
         for result in self.taming_results:
             if result.get("chest", ""):
                 if result["chest"] == "gold":
@@ -115,7 +115,7 @@ class PetFamiliars:
             if result["msg"] != "rewards":
                 failures.append(result)
             else:
-                total_successes += 1
+                successes.append(result)
 
         self.taming_breakdown = {
             "gold_chests": gold_chests,
@@ -123,7 +123,7 @@ class PetFamiliars:
             "rusted_chests": rusted_chests,
             "failures": failures,
             "total_gold": total_gold,
-            "total_successes": total_successes
+            "successes": successes
         }
 
     def print_taming_breakdown(self):
@@ -139,7 +139,7 @@ class PetFamiliars:
         print "rusted_chests:", len(self.taming_breakdown["rusted_chests"])
         print "total_gold:", self.taming_breakdown["total_gold"]
         print "total successfully pet:", \
-            self.taming_breakdown["total_successes"]
+            len(self.taming_breakdown["successes"])
 
         if self.taming_breakdown["failures"]:
             print "failed:", len(self.taming_breakdown["failures"]),
