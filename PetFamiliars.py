@@ -72,8 +72,16 @@ class PetFamiliars:
                     sys.stderr.write("Error: Tried to equip familiar '"
                                      + str(beast["name"]) +
                                      "' but still failed to 'pet'")
+
+            # add in id + name here, else results are unknown
+            result["id"] = beast["id"]
+            result["name"] = beast["name"]
+
             self.taming_results.append(result)
-            self.echo(" -- message: " + result["msg"], True)
+            chest = ""
+            if result.get("chest"):
+                chest = " -- chest: " + result["chest"]
+            self.echo(" -- message: " + result["msg"] + chest, True)
         self.__breakdown_taming_results()
 
     def __breakdown_taming_results(self):
@@ -96,7 +104,7 @@ class PetFamiliars:
                 elif result["chest"] == "rusted":
                     rusted_chests.append(result)
 
-            total_gold += result.get("gold", 0)
+            total_gold += int(result.get("gold", 0))
 
             if result["msg"] != "rewards":
                 failures.append(result)
@@ -108,7 +116,8 @@ class PetFamiliars:
             "iron_chests": iron_chests,
             "rusted_chests": rusted_chests,
             "failures": failures,
-            "total_gold": total_gold
+            "total_gold": total_gold,
+            "total_sucesses": total_successes
         }
 
     def print_taming_breakdown(self):
