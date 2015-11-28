@@ -44,7 +44,7 @@ class Bestiary:
         if self.verbose:
             sys.stdout.write(msg)
 
-    def get_list(self):
+    def get_all(self):
         """Curl and then parse all bestiary pages, returning results.
 
         :return: list of dicts, of all beasts
@@ -109,7 +109,7 @@ class Bestiary:
         :return:
         """
         if not self.beasts:
-            self.get_list()
+            self.get_all()
 
         # print stats
         print "locked: ", len(self.beasts_breakdown["locked"]),

@@ -16,7 +16,7 @@ if not FR_COOKIE:
     exit()
 
 # B = Bestiary(fr_cookie=FR_COOKIE, verbose=True)
-# B.get_list()
+# B.get_all()
 # B.print_beasts_breakdown()
 
 # pf = PetFamiliars(fr_cookie=FR_COOKIE,

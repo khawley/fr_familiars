@@ -45,6 +45,6 @@ DRAGON_LIST = []
     from Loyal to Awakened frequenly, this list should be updated.
   Example Code to get list:
     b = Bestiary(FR_COOKIE)
-    BESTIARY_BREAKDOWN = b.get_list()
+    BESTIARY_BREAKDOWN = b.get_all()
 """
 BESTIARY_BREAKDOWN = []
