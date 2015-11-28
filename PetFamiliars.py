@@ -27,11 +27,9 @@ class PetFamiliars:
     # and are now waiting for a new familiar to be equipped
     dragons_to_equip = []
 
-    send_headers = []
-    bestiary_breakdown = {}
-    to_tame = []
-    taming_results = []
-    taming_breakdown = {}
+    bestiary_breakdown = {}  # dict of lists from Bestiary.get_all()
+    taming_results = []  # list of dicts, results of each familiar pet
+    taming_breakdown = {}  # breakdown of taming_results
 
     def __init__(self, fr_cookie, equip_dragon=None,
                  bestiary_breakdown=None, dragon_list=None,
@@ -51,7 +49,7 @@ class PetFamiliars:
         """
         self.fr_cookie = fr_cookie
         self.verbose = verbose
-        self.equip_dragon = equip_dragon
+        self.equip_dragon = str(equip_dragon)
         self.pet_awakened = pet_awakened
         self.bestiary_breakdown = bestiary_breakdown or {}
         self.dragons = dragon_list or []
