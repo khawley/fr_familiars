@@ -100,7 +100,7 @@ class PetFamiliars:
         rusted_chests = []
         failures = []
         successes = []
-        total_gold = 0
+        total_treasure = 0
         for result in self.taming_results:
             if result.get("chest", ""):
                 if result["chest"] == "gold":
@@ -110,7 +110,7 @@ class PetFamiliars:
                 elif result["chest"] == "rusted":
                     rusted_chests.append(result)
 
-            total_gold += int(result.get("gold", 0))
+            total_treasure += int(result.get("treasure", 0))
 
             if result["msg"] != "rewards":
                 failures.append(result)
@@ -122,7 +122,7 @@ class PetFamiliars:
             "iron_chests": iron_chests,
             "rusted_chests": rusted_chests,
             "failures": failures,
-            "total_gold": total_gold,
+            "total_treasure": total_treasure,
             "successes": successes
         }
 
@@ -219,7 +219,7 @@ class PetFamiliars:
             # is treasure pile?
             match = re.search(self.treasure_url_patt, img.attrs["src"])
             if match:
-                result["gold"] = img.find_parent("span").text.strip()
+                result["treasure"] = img.find_parent("span").text.strip()
                 continue
 
             # has a chest?
