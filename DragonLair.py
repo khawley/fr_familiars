@@ -61,12 +61,14 @@ class DragonLair:
     def get_list(self):
         i = 1
         while i <= self.lair_max_page:
-            self.echo("-- curling lair page: " + str(i))
+            self.echo("- curling lair page: " + str(i))
             html = MyCurl.curl(self.lair_url + str(i), self.send_headers)
-            self.echo(" -- parsing lair page", True)
-            self.__parse_lair_page(html)
+            self.echo(" - parsing lair page", True)
+            if not self.__parse_lair_page(html):
+                break
             i += 1
-        pass
+
+        return self.dragons
 
     def __parse_lair_page(self, html):
 
@@ -88,6 +90,9 @@ class DragonLair:
             result = {}
 
             a_tag = dragon_card.find("a")
+            if not a_tag:
+                # no more dragons on the page, or the next pages, exit back
+                return False
             match = re.search(self.dragon_url_patt, a_tag.attrs["href"])
             if match:
                 result["dragon_id"] = match.group("dragon_id")
@@ -104,6 +109,8 @@ class DragonLair:
 
             if result:
                 self.dragons.append(result)
+
+        return True
 
     def __get_dragon_familiar_id(self, dragon_id):
         self.echo("---- curling dragon id: " + str(dragon_id))
