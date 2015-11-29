@@ -273,8 +273,8 @@ class Bestiary:
             to_search = self.beasts_breakdown[key]
         else:
             to_search = self.beasts
-        return (beast for beast in to_search
-                if beast["id"] == beast_id).next() or {}
+        return next((beast for beast in to_search
+                if beast["id"] == beast_id), {})
 
     def get_beast_name_by_id(self, beast_id, key=None):
         """
