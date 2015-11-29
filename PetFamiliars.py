@@ -172,7 +172,7 @@ class PetFamiliars:
             print "gold_chests: 0"
         print "iron_chests:", len(self.taming_breakdown["iron_chests"])
         print "rusted_chests:", len(self.taming_breakdown["rusted_chests"])
-        print "total_gold:", self.taming_breakdown["total_gold"]
+        print "total_treasure:", self.taming_breakdown["total_treasure"]
         print "total successfully pet:", \
             len(self.taming_breakdown["successes"])
 
