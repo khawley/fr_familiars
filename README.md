@@ -5,6 +5,13 @@ This set of python files is a compilation of my hacking around one day.  I have 
 I have a more features in mind, but for now, it does the basic function of finding all the familiars I am currently 'taming' and pets or equips them as needed.
 
 ## Getting Started
+
+### Prep your environment
+This is a python script, and will need a couple extra packages.  If you already have pip installed, you can run
+
+    >> pip install -r requirements.txt
+
+### Create your Settings file
 First, look at the **settings_example.py**.  This file holds all the 'global' settings needed to make the classes work.  Some are optional, a couple are _required_.
   
 The easiest way to get your Flight Rising Cookie, in Chrome, is to open the _inspector_ and right click on any url in the Network tab and _Copy Request Headers_.  Your Cookie will be a string in the result.  _Copy the entire line._
