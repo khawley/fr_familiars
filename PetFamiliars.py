@@ -96,14 +96,7 @@ class PetFamiliars:
 
         for beast in beasts_to_pet:
             self.echo("-- petting " + beast["name"])
-            result = self.pet_one_familiar(beast["id"])
-            if result["msg"] == "not equipped":
-                if self.__equip_familiar(beast["id"]):
-                    result = self.pet_one_familiar(beast["id"])
-                    if result["msg"] == "not equipped":
-                        sys.stderr.write("Error: Tried to equip familiar '" +
-                                         str(beast["name"]) +
-                                         "' but still failed to 'pet'")
+            result = self.pet_one_familiar(beast["id"], beast["name"])
 
             # add in id + name here, else results are unknown
             result["id"] = beast["id"]
@@ -180,10 +173,13 @@ class PetFamiliars:
             print "failed:", len(self.taming_breakdown["failures"]),
             print "-", self.taming_breakdown["failures"]
 
-    def pet_one_familiar(self, familiar_id):
+    def pet_one_familiar(self, familiar_id, familiar_name="",
+                         recursing=False):
         """
         Pet familiar of id passed in and return results
         :param string familiar_id: familiar id to pet
+        :param string familiar_name: familiar name, used for error statement
+        :param bool recursing: True/False to prevent infinite loop recursion
         :return: results = { "msg": "...",
         :rtype: dict
         """
@@ -196,6 +192,15 @@ class PetFamiliars:
             if dragon_id:
                 self.dragons_to_equip.append(dragon_id)
                 self.__unequip_dragons_familiar(dragon_id)
+
+        if result["msg"] == "not equipped" and not recursing:
+            if self.__equip_familiar(familiar_id):
+                result = self.pet_one_familiar(familiar_id, familiar_name, True)
+                if result["msg"] == "not equipped":
+                    sys.stderr.write("Error: Tried to equip familiar '" +
+                                     str((familiar_id, familiar_name)) +
+                                     "' but still failed to 'pet'")
+
         return result
 
     def __equip_familiar(self, familiar_id):
@@ -266,6 +271,8 @@ class PetFamiliars:
             if match:
                 result = self.__parse_rewards(div)
                 break
+
+            result = {"msg": "error, not able to parse msg"}
         return result
 
     def __parse_rewards(self, div):
