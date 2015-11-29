@@ -143,11 +143,39 @@ class Bestiary:
                 self.get_all()
             breakdown = self.beasts_breakdown
 
+        # breakdown further, for better user inspection
+        wary = []
+        tolerant = []
+        relaxed = []
+        inquisitive = []
+        companion = []
+        loyal = []
+        for beast in breakdown["taming"]:
+            loyalty = beast.get("loyalty", "").lower()
+            if loyalty == "wary":
+                wary.append(beast)
+            elif loyalty == "tolerant":
+                tolerant.append(beast)
+            elif loyalty == "relaxed":
+                relaxed.append(beast)
+            elif loyalty == "inquisitive":
+                inquisitive.append(beast)
+            elif loyalty == "companion":
+                companion.append(beast)
+            elif loyalty == "loyal":
+                loyal.append(beast)
+
         # print stats
         print "locked: ", len(breakdown["locked"]),
         print " -", breakdown["locked"]
         print "awakened: ", len(breakdown["awakened"])
         print "taming: ", len(breakdown["taming"])
+        print " -- wary: ", len(wary), "-", wary
+        print " -- tolerant: ", len(tolerant), "-", tolerant
+        print " -- relaxed: ", len(relaxed), "-", relaxed
+        print " -- inquisitive: ", len(inquisitive), "-", inquisitive
+        print " -- companion: ", len(companion), "-", companion
+        print " -- loyal: ", len(loyal), "-", loyal
         print "total =", len(breakdown["bestiary"])
         print
 
