@@ -23,7 +23,7 @@ class Bestiary:
     beasts = []  # list of all beasts in the bestiary
     beasts_breakdown = {}  # dict based on 'taming', 'awakened', &  'locked'
 
-    def __init__(self, fr_cookie, pages=None, verbose=False):
+    def __init__(self, fr_cookie, pages=None, bestiary_breakdown=None, verbose=False):
         """
         :param string fr_cookie: Cookie that has login information
         :param int pages: Number of pages from 1 to 'pages' to parse
@@ -32,6 +32,10 @@ class Bestiary:
         """
         self.fr_cookie = fr_cookie
         self.pages = pages or 43
+        self.beasts_breakdown = bestiary_breakdown
+        if bestiary_breakdown:
+            self.beasts = [v for k in bestiary_breakdown
+                           for v in bestiary_breakdown[k]]
         self.verbose = verbose
 
         # must have User-Agent set
@@ -254,6 +258,35 @@ class Bestiary:
             "loyalty": loyalty,
             "src": src
         }
+
+    def get_beast_by_id(self, beast_id, key=None):
+        """
+        Searches all beasts and returns the dict of the beast_id
+        :param string beast_id: id of familiar to find
+        :param string key: key used to limit how much to search, will accept
+            "taming", "awakened", "locked" - the keys of
+            self.bestiary_breakdown
+        :return: dict of the familiar
+        :rtype: dict
+        """
+        if key and key in self.beasts_breakdown:
+            to_search = self.beasts_breakdown[key]
+        else:
+            to_search = self.beasts
+        return (beast for beast in to_search
+                if beast["id"] == beast_id).next() or {}
+
+    def get_beast_name_by_id(self, beast_id, key=None):
+        """
+        Uses self.get_beast_by_id and returns just the name of beast
+        :param string beast_id: id of familiar to find
+        :param string key: key used to limit how much to search, will accept
+            "taming", "awakened", "locked" - the keys of
+            self.bestiary_breakdown
+        :return: name of the familiar
+        :rtype: string
+        """
+        return self.get_beast_by_id(beast_id, key).get("name", "")
 
     @staticmethod
     def __locate_beast_image(tag):
