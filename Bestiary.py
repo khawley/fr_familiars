@@ -62,15 +62,16 @@ class Bestiary:
         :rtype: dict
         """
         for i in range(1, self.pages + 1):
-            self.__get_page(i)
-        self.__breakdown_beasts()
+            self.beasts += self.__get_page(i)
+        self.beasts_breakdown = self.__breakdown_beasts()
         return self.beasts_breakdown
 
     def __get_page(self, page):
         """
         Internal function to get & parse the html from one page of the Bestiary
         :param int/string page:
-        :return:
+        :return: results of __parse_html, the list of beasts on that page
+        :rtype: list
         """
         url = self.base_bestiary_url + str(page)
         self.echo("curling " + url)
@@ -86,25 +87,30 @@ class Bestiary:
         :return: beasts_breakdown
         :rtype: dict of lists
         """
-        self.__get_page(page)
-        self.__breakdown_beasts()
-        return self.beasts_breakdown
+        this_page_beasts = self.__get_page(page)
+        this_page_breakdown = self.__breakdown_beasts(this_page_beasts)
+        return this_page_breakdown
 
-    def __breakdown_beasts(self):
-        """Using self.beasts, determine awakened, locked, & taming.
-        Write to self.beasts_breakdown.
-
-        :return:
+    def __breakdown_beasts(self, these_beasts=None):
+        """Using self.beasts (or these_beasts), determine awakened, locked, & taming.
+        :param list these_beasts: a specific list to breakdown
+        :return: dict of lists, sorted by "bestiary", "awakened", "locked",
+            and "taming"
+        :rtype: dict
         """
-        if not self.beasts:
-            sys.stderr.write("Error: No bestiary to breakdown")
+        if these_beasts:
+            beasts_to_breakdown = these_beasts
+        elif self.beasts:
+            beasts_to_breakdown = self.beasts
+        else:
+            sys.stderr.write("Error: No lists of beasts to breakdown")
             return
 
         awakened = []
         locked = []
         taming = []
 
-        for beast in self.beasts:
+        for beast in beasts_to_breakdown:
             loyalty = beast["loyalty"].lower()
             if loyalty == "awakened":
                 awakened.append(beast)
@@ -113,31 +119,35 @@ class Bestiary:
             else:
                 taming.append(beast)
 
-        if len(self.beasts) != \
+        if len(beasts_to_breakdown) != \
                 (len(locked) + len(awakened) + len(taming)):
             sys.stderr.write("Error!  Not adding up correctly!")
 
-        self.beasts_breakdown = {
-            "bestiary": self.beasts,
+        return {
+            "bestiary": beasts_to_breakdown,
             "awakened": awakened,
             "locked": locked,
             "taming": taming
         }
 
-    def print_beasts_breakdown(self):
+    def print_beasts_breakdown(self, this_breakdown=None):
         """Print the breakdown of awakened, locked, taming & total.
 
         :return:
         """
-        if not self.beasts:
-            self.get_all()
+        if this_breakdown:
+            breakdown = this_breakdown
+        else:
+            if not self.beasts:
+                self.get_all()
+            breakdown = self.beasts_breakdown
 
         # print stats
-        print "locked: ", len(self.beasts_breakdown["locked"]),
-        print " -", self.beasts_breakdown["locked"]
-        print "awakened: ", len(self.beasts_breakdown["awakened"])
-        print "taming: ", len(self.beasts_breakdown["taming"])
-        print "total =", len(self.beasts)
+        print "locked: ", len(breakdown["locked"]),
+        print " -", breakdown["locked"]
+        print "awakened: ", len(breakdown["awakened"])
+        print "taming: ", len(breakdown["taming"])
+        print "total =", len(breakdown["bestiary"])
         print
 
     def __parse_html(self, html):
@@ -148,53 +158,72 @@ class Bestiary:
         :param string html:
         :return: None
         """
+        this_page_beasts = []
         soup = BeautifulSoup(html, "html.parser")
         main_div = soup.select("#super-container")[0]
         this_div = list(main_div.children)[-2].find("div")
 
         # loop through each span, which contains 1 beast each
         for span in this_div.find_all("span"):
+            kids = list(span.children)
+            if len(kids) == 1 and type(kids[0]) is NavigableString:
+                continue
 
-            beast_id = None
-            name = ""
-            loyalty = ""
-            src = ""
+            result = self.__parse_beast_span(span)
 
-            # loop through the divs of the span, which could have:
-            # img w/ id, name, description, status images, loyalty text
-            for div in span.children:
-                if type(div) == NavigableString:
-                    continue
-
-                img = div.find(self.__locate_beast_image)
-                if img:
-                    src = img.attrs["src"]
-                    match = re.search(self.img_patt, src)
-                    beast_id = match.group("beast_id") if match else beast_id
-                    continue
-
-                # name
-                txt = HTMLParser().unescape(div.text)
-                match = re.search(self.name_patt, txt)
-                if match:
-                    name = match.group("name")
-                    continue
-
-                # loyalty
-                match = re.search(self.loyalty_patt, txt)
-                if match:
-                    loyalty = match.group("loyalty")
-
-            if beast_id and name:
-                self.beasts.append({
-                    "id": beast_id,
-                    "src": src,
-                    "name": name,
-                    "loyalty": loyalty
-                })
-            elif beast_id and not name:
+            if result["id"] and result["name"]:
+                this_page_beasts.append(result)
+            elif result["id"] and not result["name"]:
                 sys.stderr.write("Error: Parsed out id, but not name - " +
                                  HTMLParser().unescape(span.text))
+
+        return this_page_beasts
+
+    def __parse_beast_span(self, span):
+        """
+        Examine the span & its children to get relevant information about beast
+        (Split out from self.__parse_html() because breaking out of an inner
+        for-loop, inside a for-loop, is a pain.)
+        :param Tag span:
+        :return: parsed results of beast_id, name, loyalty, & src
+        :rtype: dict
+        """
+        beast_id = ""
+        name = ""
+        loyalty = ""
+        src = ""
+
+        # loop through the divs of the span, which could have:
+        # img w/ id, name, description, status images, loyalty text
+        for div in span.children:
+            if type(div) == NavigableString:
+                continue
+
+            img = div.find(self.__locate_beast_image)
+            if img:
+                src = img.attrs["src"]
+                match = re.search(self.img_patt, src)
+                beast_id = match.group("beast_id") if match else beast_id
+                continue
+
+            # name
+            txt = HTMLParser().unescape(div.text)
+            match = re.search(self.name_patt, txt)
+            if match:
+                name = match.group("name")
+                continue
+
+            # loyalty
+            match = re.search(self.loyalty_patt, txt)
+            if match:
+                loyalty = match.group("loyalty")
+
+        return {
+            "id": beast_id,
+            "name": name,
+            "loyalty": loyalty,
+            "src": src
+        }
 
     @staticmethod
     def __locate_beast_image(tag):
