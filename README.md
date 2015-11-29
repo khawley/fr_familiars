@@ -14,7 +14,9 @@ This is a python script, and will need a couple extra packages.  If you already 
 ### Create your Settings file
 First, look at the **settings_example.py**.  This file holds all the 'global' settings needed to make the classes work.  Some are optional, a couple are _required_.
   
-The easiest way to get your Flight Rising Cookie, in Chrome, is to open the _inspector_ and right click on any url in the Network tab and _Copy Request Headers_.  Your Cookie will be a string in the result.  _Copy the entire line._
+The easiest way to get your Flight Rising Cookie, in Chrome, is to navigate to your dragon lair page, then open the _inspector_ and right click on any url in the Network tab and _Copy Request Headers_.  Your Cookie will be a string in the result.  _Copy the entire line._
+
+** Don't grab a Cookie set from the www1 domain.  It may not work with the python script. (You should see a PHPSESSID as part of the Cookie string if you are on the correct domain.)
 
 ## Running it
 Once you have **settings_example.py** setup and your Cookie in it, you can use **pet_my_familiars.py** to pet all your familiars.
