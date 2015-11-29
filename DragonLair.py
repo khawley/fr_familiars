@@ -67,7 +67,7 @@ class DragonLair:
         """
         i = 1
         while i <= self.lair_max_page:
-            self.echo("- curling lair page: " + str(i))
+            self.echo("+ curling lair page: " + str(i))
             html = MyCurl.curl(self.lair_url + str(i), self.send_headers)
             self.echo(" - parsing lair page", True)
             if not self.__parse_lair_page(html):
