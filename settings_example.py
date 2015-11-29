@@ -32,7 +32,8 @@ LAIR_ID = ''
 
 """
   Optional: you might run Dragon Lair once and import the list here.
-    If you Lair changes frequently or you have many changes in familiars, then you may not wish to store your dragons.
+    If you Lair changes frequently or you have many changes in familiars,
+    then you may not wish to store your dragons.
   Example Code to get list:
     d = DragonLair(LAIR_ID, FR_COOKIE)
     DRAGON_LIST = d.get_list()

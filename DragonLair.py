@@ -47,8 +47,8 @@ class DragonLair:
                           self.lair_id + "&tab=dragon&did="
 
     def echo(self, msg, newline=False):
-        """If verbose, print the msg.
-
+        """
+        If verbose, print the msg.
         :param string msg: String to be printed
         :param bool newline: Whether to add a newline after msg
         :return:
@@ -59,6 +59,12 @@ class DragonLair:
             sys.stdout.write(msg)
 
     def get_list(self):
+        """
+        Crawl & parse each page of dragon lair, until reaches an
+        empty dragon space.
+        :return: list of dragons
+        :rtype: list
+        """
         i = 1
         while i <= self.lair_max_page:
             self.echo("- curling lair page: " + str(i))
@@ -71,11 +77,19 @@ class DragonLair:
         return self.dragons
 
     def __parse_lair_page(self, html):
-
+        """
+        Parse the lair page for each dragon found.  If it has a familiar
+        equipped, then crawl that dragon's page to get info on the familiar.
+        Appends all results to self.dragons
+        :param string html: html of the lair page
+        :return: True/False whether there are more dragons after
+            the current page
+        :rtype: bool
+        """
         soup = BeautifulSoup(html, "html.parser")
 
         if self.lair_max_page == 1:
-            # may not have been set, go find it in the page
+            # may not have been set if first call, go find it in the page
             paging_tags = soup.find_all(
                 self.__locate_lair_paging_urls)
             self.lair_max_page = max([int(i.text) for i in paging_tags
@@ -84,7 +98,8 @@ class DragonLair:
         dragon_cards = soup.select(".dragoncard")
 
         if len(dragon_cards) != 15:
-            sys.stderr.write("Error: Something happened, did not find 15 dragons on page")
+            sys.stderr.write("Error: Something happened, did not find 15"
+                             " dragons on page")
 
         for dragon_card in dragon_cards:
             result = {}
@@ -113,6 +128,12 @@ class DragonLair:
         return True
 
     def __get_dragon_familiar_id(self, dragon_id):
+        """
+        Crawl and parse out the familiar that is attached to the given dragon
+        :param string dragon_id: the dragon id to look for familiar
+        :return: id of the found familiar
+        :rtype: string
+        """
         self.echo("---- curling dragon id: " + str(dragon_id))
         dragon_html = MyCurl.curl(self.dragon_url + str(dragon_id),
                                   self.send_headers)
@@ -122,6 +143,12 @@ class DragonLair:
         return fam_id
 
     def __parse_dragon_page(self, html):
+        """
+        Find the familiar attached on this page.
+        :param string html: html of one dragon's page
+        :return: familiar id or an empty string
+        :rtype: string
+        """
         soup = BeautifulSoup(html, "html.parser")
         for a_tag in soup.select("a.clueitem"):
             img = a_tag.find("img")
@@ -133,9 +160,23 @@ class DragonLair:
         return ""
 
     def __locate_lair_paging_urls(self, tag):
+        """
+        Given a tag from BeautifulSoup, determine if it's a tag with an href,
+        and that href is a lair paging url.
+        :param Tag tag:
+        :return: True/False
+        :rtype: bool
+        """
         return tag.has_attr("href") and \
                re.search(self.lair_url_patt, tag.attrs["href"])
 
     def __locate_familiar_equipped_img(self, tag):
+        """
+        Given a tag from BeautifulSoup, determine if it has a src, and if
+        that src matches the familiar equipped pattern.
+        :param Tag tag:
+        :return: True/False
+        :rtype: bool
+        """
         return tag.has_attr("src") and \
                re.search(self.familiar_equipped_patt, tag.attrs["src"])

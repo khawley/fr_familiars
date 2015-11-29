@@ -66,8 +66,8 @@ class PetFamiliars:
         ]
 
     def echo(self, msg, newline=False):
-        """If verbose, print the msg.
-
+        """
+        If verbose, print the msg.
         :param string msg: String to be printed
         :param bool newline: Whether to add a newline after msg
         :return:
@@ -79,7 +79,8 @@ class PetFamiliars:
 
     def pet_my_familiars(self):
         """
-        Cycle through all beasts in besitary_breakdown["taming"] and, if pet_awakened is True, all the beasts in bestiary_breakdown["awakened"]
+        Cycle through all beasts in besitary_breakdown["taming"] and, if
+        pet_awakened is True, all the beasts in bestiary_breakdown["awakened"]
         All results are parsed and appended to taming_results, then passed to
         __breakdown_taming_results()
         :return:

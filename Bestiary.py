@@ -10,14 +10,18 @@ class Bestiary:
     """
     Class to curl bestiary pages and return results of beasts
     """
+
+    # regex patterns, compiled on init for time/memory saving
     img_patt = re.compile(r'\/(?P<beast_id>[\d]+)(?:_gray)?\.png')
     name_patt = re.compile(r'^\n(?P<name>[\w\s\-\'\*]+)\n'
                            r'(?P<description>(?:\n|.)*)\n$', re.UNICODE)
     loyalty_patt = re.compile(r'^(?P<loyalty>[\w]+)$')
-    beasts = []
-    beasts_breakdown = {}
-    base_url = "http://flightrising.com/main.php?" \
-               "p=bestiary&tab=familiars&page="
+
+    base_bestiary_url = "http://flightrising.com/main.php?" \
+                        "p=bestiary&tab=familiars&page="
+
+    beasts = []  # list of all beasts in the bestiary
+    beasts_breakdown = {}  # dict based on 'taming', 'awakened', &  'locked'
 
     def __init__(self, fr_cookie, pages=None, verbose=False):
         """
@@ -29,6 +33,7 @@ class Bestiary:
         self.fr_cookie = fr_cookie
         self.pages = pages or 43
         self.verbose = verbose
+
         # must have User-Agent set
         self.send_headers = [
             'Accept-Language: en-US,en;q=0.8',
@@ -39,8 +44,8 @@ class Bestiary:
         ]
 
     def echo(self, msg, newline=False):
-        """If verbose, print the msg.
-
+        """
+        If verbose, print the msg.
         :param string msg: String to be printed
         :param bool newline: Whether to add a newline after msg
         :return:
@@ -51,12 +56,11 @@ class Bestiary:
             sys.stdout.write(msg)
 
     def get_all(self):
-        """Curl and then parse all bestiary pages, returning results.
-
+        """
+        Curl and then parse all bestiary pages, returning results.
         :return: dict of lists, of all beasts
         :rtype: dict
         """
-
         for i in range(1, self.pages + 1):
             self.__get_page(i)
         self.__breakdown_beasts()
@@ -68,12 +72,11 @@ class Bestiary:
         :param int/string page:
         :return:
         """
-        url = self.base_url + str(page)
+        url = self.base_bestiary_url + str(page)
         self.echo("curling " + url)
         html = MyCurl.curl(url, self.send_headers)
-        # html = open("bestiary_response.html")
         self.echo(" -- parsing", True)
-        self.__parse_html(html)
+        return self.__parse_html(html)
 
     def get_one_page(self, page):
         """

@@ -58,8 +58,8 @@ class MyCurl:
         name, value = header_line.split(':', 1)
 
         # Remove whitespace that may be present.
-        # Header lines include the trailing newline, and there may be whitespace
-        # around the colon.
+        # Header lines include the trailing newline,
+        # and there may be whitespace around the colon.
         name = name.strip()
         value = value.strip()
 
