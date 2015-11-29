@@ -207,11 +207,15 @@ class PetFamiliars:
                                      "' but still failed to 'pet'")
 
         # need to visit the dragon page first for some reason
+        # will only be 'caught' and executed, if just equipped the new
+        # familiar using the above.  If not, will fail (cause it won't know
+        # the dragon_id)
         if result["msg"] == "visit lair first":
             dragon_id = self.__find_dragon_with_familiar(familiar_id)
-            self.__visit_dragon(dragon_id)
-            result = self.pet_one_familiar(familiar_id,
-                                           familiar_name, True)
+            if dragon_id:
+                self.__visit_dragon(dragon_id)
+                result = self.pet_one_familiar(familiar_id,
+                                               familiar_name, True)
 
         return result
 
@@ -245,6 +249,9 @@ class PetFamiliars:
             self.echo(" -- not equipping, no default dragon")
             return False
 
+        for i in xrange(0, len(self.dragons)):
+            if self.dragons[i]["dragon_id"] == dragon_id:
+                self.dragons[i]["familiar_id"] = familiar_id
         self.echo(" ~ equipping familiar")
         url = 'http://flightrising.com/includes/familiar_active.php?' \
               'id=' + str(dragon_id) + '&itm=' + str(familiar_id)
