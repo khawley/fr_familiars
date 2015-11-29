@@ -16,6 +16,7 @@ class PetFamiliars:
     # regex globals, declared here to save on compile time
     bonded_patt = re.compile(r'You have already bonded with this '
                              r'familiar today\.')
+    first_bonding_patt = re.compile(r'Please visit your lair first.')
     equipped_patt = re.compile(r'You do not have that familiar equipped\.')
     rewards_patt = re.compile(r"You[\\]?\'ve earned these rewards today:")
     treasure_url_patt = re.compile(r'\/treasure_pile\.png')
@@ -186,29 +187,52 @@ class PetFamiliars:
         url = "http://flightrising.com/includes/ol/fam_bonding.php"
         result = self.__parse_response_familiar_bonding(
             MyCurl.curl(url, self.send_headers, {"id": familiar_id}))
+
+        # got a gold chest, so unequip familiar, and add dragon to equip list
         if self.dragons and result.get("chest") == "gold":
             self.echo(" * returning familiar to hoard")
-            dragon_id = self.__locate_dragon(familiar_id)
+            dragon_id = self.__find_dragon_with_familiar(familiar_id)
             if dragon_id:
                 self.dragons_to_equip.append(dragon_id)
                 self.__unequip_dragons_familiar(dragon_id)
 
+        # familiar not equipped, try equipping & then petting
         if result["msg"] == "not equipped" and not recursing:
             if self.__equip_familiar(familiar_id):
-                result = self.pet_one_familiar(familiar_id, familiar_name, True)
+                result = self.pet_one_familiar(familiar_id,
+                                               familiar_name, True)
                 if result["msg"] == "not equipped":
                     sys.stderr.write("Error: Tried to equip familiar '" +
                                      str((familiar_id, familiar_name)) +
                                      "' but still failed to 'pet'")
 
+        # need to visit the dragon page first for some reason
+        if result["msg"] == "visit lair first":
+            dragon_id = self.__find_dragon_with_familiar(familiar_id)
+            self.__visit_dragon(dragon_id)
+            result = self.pet_one_familiar(familiar_id,
+                                           familiar_name, True)
+
         return result
+
+    def __visit_dragon(self, dragon_id):
+        """
+        Curl the dragon page.  Needed for 'first time' petting of a familiar.
+        :param dragon_id: id of dragon to 'visit'
+        :return: html body of visit dragon curl
+        :rtype: string
+        """
+        url = "http://flightrising.com/main.php?p=lair&tab=dragon&did=" + \
+              str(dragon_id)
+        return MyCurl.curl(url, self.send_headers)
 
     def __equip_familiar(self, familiar_id):
         """
         Equip the f_id to a dragon in dragons_to_equip or the default
         equip_dragon.  If neither, return False.
         :param string familiar_id: familiar id to equip to dragon
-        :return:
+        :return: html body of equip familiar
+        :rtype: string
         """
         # if list of waiting dragons, pull from them first, then use default
         if self.dragons_to_equip:
@@ -231,12 +255,13 @@ class PetFamiliars:
         Using the dragon_id, remove the familiar, not replace it.  (Usually
         result of a gold chest familiar)
         :param string dragon_id: dragon id to remove familiar from
-        :return:
+        :return: html body of unequip dragon's familiar
+        :rtype: string
         """
         self.echo("~ unequipping dragon:" + str(dragon_id))
         url = "http://flightrising.com/includes/familiar_active.php?id=" + \
               str(dragon_id) + "&itm=0"
-        MyCurl.curl(url, self.send_headers)
+        return MyCurl.curl(url, self.send_headers)
 
     def __parse_response_familiar_bonding(self, html):
         """
@@ -266,12 +291,21 @@ class PetFamiliars:
                 }
                 break
 
+            # is first time bonding, need to visit lair page first
+            match = re.search(self.first_bonding_patt, div.text)
+            if match:
+                result = {
+                    "msg": "visit lair first"
+                }
+                break
+
             # successful?
             match = re.search(self.rewards_patt, div.text)
             if match:
                 result = self.__parse_rewards(div)
                 break
 
+            # default if not one of the above
             result = {"msg": "error, not able to parse msg"}
         return result
 
@@ -317,7 +351,7 @@ class PetFamiliars:
 
         return result
 
-    def __locate_dragon(self, familiar_id):
+    def __find_dragon_with_familiar(self, familiar_id):
         """
         Find the dragon with familiar_id equipped.
         :param string familiar_id: familiar id to locate in dragon list
@@ -326,7 +360,6 @@ class PetFamiliars:
         """
         if not self.dragons:
             return ""
-        for d in self.dragons:
-            if d["familiar_id"] == familiar_id:
-                return d["dragon_id"]
-        return ""
+
+        return next((dragon["dragon_id"] for dragon in self.dragons
+                    if dragon.get("familiar_id", "") == familiar_id), "")
