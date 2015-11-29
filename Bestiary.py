@@ -70,14 +70,15 @@ class Bestiary:
         """
         Internal function to get & parse the html from one page of the Bestiary
         :param int/string page:
-        :return: results of __parse_html, the list of beasts on that page
+        :return: results of __parse_bestiary_page, the list of beasts on
+            that page
         :rtype: list
         """
         url = self.base_bestiary_url + str(page)
         self.echo("curling " + url)
         html = MyCurl.curl(url, self.send_headers)
         self.echo(" -- parsing", True)
-        return self.__parse_html(html)
+        return self.__parse_bestiary_page(html)
 
     def get_one_page(self, page):
         """
@@ -150,7 +151,7 @@ class Bestiary:
         print "total =", len(breakdown["bestiary"])
         print
 
-    def __parse_html(self, html):
+    def __parse_bestiary_page(self, html):
         """
         Given html, find an parse out all familiar.  Store in self.bestiary.
         Store id, img_src, name, and loyalty of each beast found.
@@ -182,8 +183,9 @@ class Bestiary:
     def __parse_beast_span(self, span):
         """
         Examine the span & its children to get relevant information about beast
-        (Split out from self.__parse_html() because breaking out of an inner
-        for-loop, inside a for-loop, is a pain.)
+        (Split out from self.__parse_bestiary_page()
+        because breaking out of an inner for-loop,
+         inside a for-loop, is a pain.)
         :param Tag span:
         :return: parsed results of beast_id, name, loyalty, & src
         :rtype: dict
