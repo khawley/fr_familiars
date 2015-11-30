@@ -2,8 +2,8 @@ import re
 import sys
 from bs4 import BeautifulSoup
 
+from Echo import Echo
 from MyCurl import MyCurl
-from Bestiary import Bestiary
 
 
 class PetFamiliars:
@@ -49,11 +49,15 @@ class PetFamiliars:
         :return:
         """
         self.fr_cookie = fr_cookie
-        self.verbose = verbose
         self.equip_dragon = str(equip_dragon)
         self.pet_awakened = pet_awakened
         self.bestiary_breakdown = bestiary_breakdown or {}
         self.dragons = dragon_list or []
+
+        # use Echo class 'echo' function, of echo(msg, newline)
+        self._verbose = verbose
+        self.echo = Echo(verbose).echo
+        self.error = Echo(verbose).error
 
         # must have User-Agent set
         self.send_headers = [
@@ -66,17 +70,17 @@ class PetFamiliars:
             'X-Requested-With: XMLHttpRequest',
         ]
 
-    def echo(self, msg, newline=False):
-        """
-        If verbose, print the msg.
-        :param string msg: String to be printed
-        :param bool newline: Whether to add a newline after msg
-        :return:
-        """
-        if newline:
-            msg += "\n"
-        if self.verbose:
-            sys.stdout.write(msg)
+    @property
+    def verbose(self):
+        return self._verbose
+
+    @verbose.setter
+    def verbose(self, verbose=""):
+        # use Echo class 'echo' function, of echo(msg, newline)
+        if verbose:
+            self._verbose = verbose
+            self.echo = Echo(verbose).echo
+            self.error = Echo(verbose).error
 
     def pet_my_familiars(self):
         """
