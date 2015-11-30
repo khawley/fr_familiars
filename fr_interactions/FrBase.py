@@ -8,9 +8,18 @@ from urllib import urlencode
 class FrBase(object):
     response_headers = {}
 
-    def __init__(self, fr_cookie, verbose=False):
+    def __init__(self, fr_cookie, verbosity=0):
+        """
+
+        :param string fr_cookie: Cookie that has login information
+        :param bool verbosity: How verbose to be:
+            0 - do not print echo statements
+            1 - print echo statments
+            2 - print echo + curl statements
+        :return:
+        """
         self.fr_cookie = fr_cookie
-        self.verbose = verbose
+        self.verbosity = verbosity
 
         # must have User-Agent set
         self.send_headers = [
@@ -33,21 +42,20 @@ class FrBase(object):
         """
         if newline:
             msg += "\n"
-        if self.verbose or verbose:
+        if self.verbosity or verbose:
             sys.stdout.write(msg)
 
-    def error(self, msg, newline=False, verbose=False):
+    @staticmethod
+    def error(msg, newline=False):
         """
         If verbose, print the msg to stderr.
         :param string msg: String to be printed
         :param bool newline: Whether to add a newline after msg
-        :param bool verbose: whether to actually print
         :return:
         """
         if newline:
             msg += "\n"
-        if self.verbose or verbose:
-            sys.stderr.write(msg)
+        sys.stderr.write(msg)
 
     def curl(self, url, send_headers=None, post_data=None, verbose=False):
         response_buffer = StringIO()
@@ -67,7 +75,7 @@ class FrBase(object):
             c.setopt(c.POSTFIELDS, postfields)
         c.setopt(c.WRITEDATA, response_buffer)
         c.setopt(c.HEADERFUNCTION, self.__header_function)
-        if verbose:
+        if verbose or self.verbosity >= 2:
             c.setopt(c.VERBOSE, True)
         c.perform()
         c.close()

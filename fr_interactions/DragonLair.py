@@ -22,14 +22,17 @@ class DragonLair(FrBase):
     lair_max_page = 1
     dragons = []
 
-    def __init__(self, lair_id, fr_cookie, verbose=False):
+    def __init__(self, lair_id, fr_cookie, verbosity=False):
         """
         :param string lair_id: Id of dragon lair
         :param string fr_cookie: Cookie that has login information
-        :param bool verbose: Whether to print progress
+        :param bool verbosity: How verbose to be:
+            0 - do not print echo statements
+            1 - print echo statments
+            2 - print echo + curl statements
         :return:
         """
-        FrBase.__init__(self, fr_cookie, verbose)
+        FrBase.__init__(self, fr_cookie, verbosity)
         self.lair_id = str(lair_id)
 
         self.lair_url = "http://flightrising.com/main.php?p=lair&id=" + \

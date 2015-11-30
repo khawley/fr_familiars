@@ -32,7 +32,7 @@ class PetFamiliars(FrBase):
 
     def __init__(self, fr_cookie, equip_dragon=None,
                  bestiary_breakdown=None, dragon_list=None,
-                 pet_awakened=False, verbose=False):
+                 pet_awakened=False, verbosity=False):
         """
         Setup class with initial variables
         :param string fr_cookie: Login Cookie Header for FR
@@ -43,10 +43,13 @@ class PetFamiliars(FrBase):
         :param list dragon_list: list from DragonLair class
         :param bool pet_awakened: whether to also pet awakened familiars (must
             be in Hoard, not Vault)
-        :param bool verbose: whether to print verbose progress statements
+        :param bool verbosity: How verbose to be:
+            0 - do not print echo statements
+            1 - print echo statments
+            2 - print echo + curl statements
         :return:
         """
-        FrBase.__init__(self, fr_cookie, verbose)
+        FrBase.__init__(self, fr_cookie, verbosity)
         self.equip_dragon = str(equip_dragon)
         self.pet_awakened = pet_awakened
         self.bestiary_breakdown = bestiary_breakdown or {}

@@ -24,14 +24,17 @@ class Bestiary(FrBase):
     beasts_breakdown = {}  # dict based on 'taming', 'awakened', &  'locked'
 
     def __init__(self, fr_cookie, pages=None, bestiary_breakdown=None,
-                 verbose=False):
+                 verbosity=False):
         """
         :param string fr_cookie: Cookie that has login information
         :param int pages: Number of pages from 1 to 'pages' to parse
-        :param bool verbose: Print status statements
+        :param bool verbosity: How verbose to be:
+            0 - do not print echo statements
+            1 - print echo statments
+            2 - print echo + curl statements
         :return:
         """
-        FrBase.__init__(self, fr_cookie, verbose)
+        FrBase.__init__(self, fr_cookie, verbosity)
         self.pages = pages or 43
         self.beasts_breakdown = bestiary_breakdown
         if bestiary_breakdown:

@@ -23,7 +23,9 @@ Once you have **settings_example.py** setup and your Cookie in it, you can use *
     
     >> python pet_my_famliars
 
-Thats it.  The code is set to run _verbosely_ in that file, so you'll see a lot of print out on the command line.  If you don't want that, set `verbose=False` in the classes listed.  
+Thats it.  The code is set to run _medium verbosity_ in that file, so you'll see a lot of print out on the command line.  If you don't want that, you can it to `VERBOSITY=0` near the top of **pet_my_familiars.py**.
+
+It is also set to do a full run, collecting all your dragons and all your beasts.  If you decide to run those separately and store them in the **settings.py** file (instructions are in that file), you can change to `FULL_RUN=False`
 
 ## Errors...
 If it breaks or something goes wrong, send me an issue!  I'd like to fix it.
