@@ -1,11 +1,9 @@
 from bs4 import BeautifulSoup
 import re
 
-from .Echo import Echo
-from .MyCurl import MyCurl
+from .FrBase import FrBase
 
-
-class PetFamiliars(object):
+class PetFamiliars(FrBase):
     """
     Class built to intake, and then pet all your familiars.  Specifically those
     that are still in the process of 'taming' and have not yet been 'awakened',
@@ -47,36 +45,11 @@ class PetFamiliars(object):
         :param bool verbose: whether to print verbose progress statements
         :return:
         """
-        self.fr_cookie = fr_cookie
+        FrBase.__init__(self, fr_cookie, verbose)
         self.equip_dragon = str(equip_dragon)
         self.pet_awakened = pet_awakened
         self.bestiary_breakdown = bestiary_breakdown or {}
         self.dragons = dragon_list or []
-
-        # use property to set & get
-        self.verbose = verbose
-
-        # must have User-Agent set
-        self.send_headers = [
-            self.fr_cookie,
-            'Origin: http://flightrising.com',
-            'Accept-Language: en-US,en;q=0.8',
-            'User-Agent: Mozilla/5.0 (Windows NT 6.1; Trident/7.0; rv:11.0) like Gecko',
-            'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
-            'Accept: */*',
-            'X-Requested-With: XMLHttpRequest',
-        ]
-
-    @property
-    def verbose(self):
-        return self._verbose
-
-    @verbose.setter
-    def verbose(self, verbose):
-        # use Echo class 'echo' function, of echo(msg, newline)
-        self._verbose = verbose
-        self.echo = Echo(verbose).echo
-        self.error = Echo(verbose).error
 
     def pet_my_familiars(self):
         """
@@ -186,7 +159,7 @@ class PetFamiliars(object):
         """
         url = "http://flightrising.com/includes/ol/fam_bonding.php"
         result = self.__parse_response_familiar_bonding(
-            MyCurl.curl(url, self.send_headers, {"id": familiar_id}))
+            self.curl(url, self.send_headers, {"id": familiar_id}))
 
         # got a gold chest, so unequip familiar, and add dragon to equip list
         if self.dragons and result.get("chest") == "gold":
@@ -228,7 +201,7 @@ class PetFamiliars(object):
         """
         url = "http://flightrising.com/main.php?p=lair&tab=dragon&did=" + \
               str(dragon_id)
-        return MyCurl.curl(url, self.send_headers)
+        return self.curl(url, self.send_headers)
 
     def __equip_familiar(self, familiar_id):
         """
@@ -255,7 +228,7 @@ class PetFamiliars(object):
         self.echo(" ~ equipping familiar")
         url = 'http://flightrising.com/includes/familiar_active.php?' \
               'id=' + str(dragon_id) + '&itm=' + str(familiar_id)
-        return MyCurl.curl(url, self.send_headers)
+        return self.curl(url, self.send_headers)
 
     def __unequip_dragons_familiar(self, dragon_id):
         """
@@ -268,7 +241,7 @@ class PetFamiliars(object):
         self.echo("~ unequipping dragon:" + str(dragon_id))
         url = "http://flightrising.com/includes/familiar_active.php?id=" + \
               str(dragon_id) + "&itm=0"
-        return MyCurl.curl(url, self.send_headers)
+        return self.curl(url, self.send_headers)
 
     def __parse_response_familiar_bonding(self, html):
         """

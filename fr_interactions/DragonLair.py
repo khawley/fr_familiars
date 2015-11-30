@@ -1,11 +1,10 @@
 from bs4 import BeautifulSoup
 import re
 
-from .Echo import Echo
-from .MyCurl import MyCurl
+from .FrBase import FrBase
 
 
-class DragonLair(object):
+class DragonLair(FrBase):
     """
     Class to list all dragons in lair, and associated familiars
     """
@@ -30,35 +29,13 @@ class DragonLair(object):
         :param bool verbose: Whether to print progress
         :return:
         """
+        FrBase.__init__(self, fr_cookie, verbose)
         self.lair_id = str(lair_id)
-        self.fr_cookie = fr_cookie
-
-        # use property to set & get
-        self.verbose = verbose
 
         self.lair_url = "http://flightrising.com/main.php?p=lair&id=" + \
                         self.lair_id + "&page="
         self.dragon_url = "http://flightrising.com/main.php?p=lair&id=" + \
                           self.lair_id + "&tab=dragon&did="
-
-        self.send_headers = [
-            'Accept-Language: en-US,en;q=0.8',
-            'User-Agent: Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0',
-            'Upgrade-Insecure-Requests: 1',
-            'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            self.fr_cookie,
-        ]
-
-    @property
-    def verbose(self):
-        return self._verbose
-
-    @verbose.setter
-    def verbose(self, verbose):
-        # use Echo class 'echo' function, of echo(msg, newline)
-        self._verbose = verbose
-        self.echo = Echo(verbose).echo
-        self.error = Echo(verbose).error
 
     def get_list(self):
         """
@@ -70,7 +47,7 @@ class DragonLair(object):
         i = 1
         while i <= self.lair_max_page:
             self.echo("+ curling lair page: " + str(i))
-            html = MyCurl.curl(self.lair_url + str(i), self.send_headers)
+            html = self.curl(self.lair_url + str(i), self.send_headers)
             self.echo(" - parsing lair page", True)
             if not self.__parse_lair_page(html):
                 break
@@ -137,7 +114,7 @@ class DragonLair(object):
         :rtype: string
         """
         self.echo("---- curling dragon id: " + str(dragon_id))
-        dragon_html = MyCurl.curl(self.dragon_url + str(dragon_id),
+        dragon_html = self.curl(self.dragon_url + str(dragon_id),
                                   self.send_headers)
         self.echo(" -- parsing")
         fam_id = self.__parse_dragon_page(dragon_html)

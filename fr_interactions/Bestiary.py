@@ -3,11 +3,10 @@ from bs4 import BeautifulSoup
 from bs4.element import NavigableString
 from HTMLParser import HTMLParser
 
-from .Echo import Echo
-from .MyCurl import MyCurl
+from .FrBase import FrBase
 
 
-class Bestiary(object):
+class Bestiary(FrBase):
     """
     Class to curl bestiary pages and return results of beasts
     """
@@ -32,35 +31,12 @@ class Bestiary(object):
         :param bool verbose: Print status statements
         :return:
         """
-        self.fr_cookie = fr_cookie
+        FrBase.__init__(self, fr_cookie, verbose)
         self.pages = pages or 43
         self.beasts_breakdown = bestiary_breakdown
         if bestiary_breakdown:
             self.beasts = [v for k in bestiary_breakdown
                            for v in bestiary_breakdown[k]]
-
-        # use property to set & get
-        self.verbose = verbose
-
-        # must have User-Agent set
-        self.send_headers = [
-            'Accept-Language: en-US,en;q=0.8',
-            'User-Agent: Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0',
-            'Upgrade-Insecure-Requests: 1',
-            'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            self.fr_cookie,
-        ]
-
-    @property
-    def verbose(self):
-        return self._verbose
-
-    @verbose.setter
-    def verbose(self, verbose):
-        # use Echo class 'echo' function, of echo(msg, newline)
-        self._verbose = verbose
-        self.echo = Echo(verbose).echo
-        self.error = Echo(verbose).error
 
     def get_all(self):
         """
@@ -83,7 +59,7 @@ class Bestiary(object):
         """
         url = self.base_bestiary_url + str(page)
         self.echo("curling " + url)
-        html = MyCurl.curl(url, self.send_headers)
+        html = self.curl(url, self.send_headers)
         self.echo(" -- parsing", True)
         return self.__parse_bestiary_page(html)
 
