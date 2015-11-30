@@ -111,7 +111,7 @@ class Bestiary:
         elif self.beasts:
             beasts_to_breakdown = self.beasts
         else:
-            sys.stderr.write("Error: No lists of beasts to breakdown")
+            self.error("Error: No lists of beasts to breakdown")
             return
 
         awakened = []
@@ -129,7 +129,7 @@ class Bestiary:
 
         if len(beasts_to_breakdown) != \
                 (len(locked) + len(awakened) + len(taming)):
-            sys.stderr.write("Error!  Not adding up correctly!")
+            self.error("Error!  Not adding up correctly!")
 
         return {
             "bestiary": beasts_to_breakdown,
@@ -210,8 +210,8 @@ class Bestiary:
             if result["id"] and result["name"]:
                 this_page_beasts.append(result)
             elif result["id"] and not result["name"]:
-                sys.stderr.write("Error: Parsed out id, but not name - " +
-                                 HTMLParser().unescape(span.text))
+                self.error("Error: Parsed out id, but not name - " +
+                           HTMLParser().unescape(span.text))
 
         return this_page_beasts
 
