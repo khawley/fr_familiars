@@ -1,7 +1,6 @@
 import sys
-from PetFamiliars import PetFamiliars
-from Bestiary import Bestiary
-from DragonLair import DragonLair
+
+from fr_interactions import Bestiary, DragonLair, PetFamiliars
 
 try:
     from settings import FR_COOKIE, DRAGON_ID, \
