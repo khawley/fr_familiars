@@ -6,7 +6,7 @@ from Echo import Echo
 from MyCurl import MyCurl
 
 
-class PetFamiliars:
+class PetFamiliars(object):
     """
     Class built to intake, and then pet all your familiars.  Specifically those
     that are still in the process of 'taming' and have not yet been 'awakened',
@@ -54,10 +54,8 @@ class PetFamiliars:
         self.bestiary_breakdown = bestiary_breakdown or {}
         self.dragons = dragon_list or []
 
-        # use Echo class 'echo' function, of echo(msg, newline)
-        self._verbose = verbose
-        self.echo = Echo(verbose).echo
-        self.error = Echo(verbose).error
+        # use property to set & get
+        self.verbose = verbose
 
         # must have User-Agent set
         self.send_headers = [
@@ -75,12 +73,11 @@ class PetFamiliars:
         return self._verbose
 
     @verbose.setter
-    def verbose(self, verbose=""):
+    def verbose(self, verbose):
         # use Echo class 'echo' function, of echo(msg, newline)
-        if verbose:
-            self._verbose = verbose
-            self.echo = Echo(verbose).echo
-            self.error = Echo(verbose).error
+        self._verbose = verbose
+        self.echo = Echo(verbose).echo
+        self.error = Echo(verbose).error
 
     def pet_my_familiars(self):
         """

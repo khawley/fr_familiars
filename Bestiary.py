@@ -6,7 +6,7 @@ from HTMLParser import HTMLParser
 from Echo import Echo
 
 
-class Bestiary:
+class Bestiary(object):
     """
     Class to curl bestiary pages and return results of beasts
     """
@@ -38,10 +38,8 @@ class Bestiary:
             self.beasts = [v for k in bestiary_breakdown
                            for v in bestiary_breakdown[k]]
 
-        # use Echo class 'echo' function, of echo(msg, newline)
-        self._verbose = verbose
-        self.echo = Echo(verbose).echo
-        self.error = Echo(verbose).error
+        # use property to set & get
+        self.verbose = verbose
 
         # must have User-Agent set
         self.send_headers = [
@@ -57,12 +55,11 @@ class Bestiary:
         return self._verbose
 
     @verbose.setter
-    def verbose(self, verbose=""):
+    def verbose(self, verbose):
         # use Echo class 'echo' function, of echo(msg, newline)
-        if verbose:
-            self._verbose = verbose
-            self.echo = Echo(verbose).echo
-            self.error = Echo(verbose).error
+        self._verbose = verbose
+        self.echo = Echo(verbose).echo
+        self.error = Echo(verbose).error
 
     def get_all(self):
         """

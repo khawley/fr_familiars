@@ -5,7 +5,7 @@ from Echo import Echo
 from MyCurl import MyCurl
 
 
-class DragonLair:
+class DragonLair(object):
     """
     Class to list all dragons in lair, and associated familiars
     """
@@ -33,10 +33,8 @@ class DragonLair:
         self.lair_id = str(lair_id)
         self.fr_cookie = fr_cookie
 
-        # use Echo class 'echo' function, of echo(msg, newline)
-        self._verbose = verbose
-        self.echo = Echo(verbose).echo
-        self.error = Echo(verbose).error
+        # use property to set & get
+        self.verbose = verbose
 
         self.lair_url = "http://flightrising.com/main.php?p=lair&id=" + \
                         self.lair_id + "&page="
@@ -56,12 +54,11 @@ class DragonLair:
         return self._verbose
 
     @verbose.setter
-    def verbose(self, verbose=""):
+    def verbose(self, verbose):
         # use Echo class 'echo' function, of echo(msg, newline)
-        if verbose:
-            self._verbose = verbose
-            self.echo = Echo(verbose).echo
-            self.error = Echo(verbose).error
+        self._verbose = verbose
+        self.echo = Echo(verbose).echo
+        self.error = Echo(verbose).error
 
     def get_list(self):
         """
