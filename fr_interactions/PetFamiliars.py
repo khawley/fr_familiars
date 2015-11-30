@@ -3,6 +3,7 @@ import re
 
 from .FrBase import FrBase
 
+
 class PetFamiliars(FrBase):
     """
     Class built to intake, and then pet all your familiars.  Specifically those
@@ -16,8 +17,8 @@ class PetFamiliars(FrBase):
     first_bonding_patt = re.compile(r'Please visit your lair first.')
     equipped_patt = re.compile(r'You do not have that familiar equipped\.')
     rewards_patt = re.compile(r"You[\\]?\'ve earned these rewards today:")
-    treasure_url_patt = re.compile(r'\/treasure_pile\.png')
-    chest_url_patt = re.compile(r'\/trinket\/(?P<chest_id>\d+)\.png')
+    treasure_url_patt = re.compile(r'/treasure_pile\.png')
+    chest_url_patt = re.compile(r'/trinket/(?P<chest_id>\d+)\.png')
     loyalty_patt = re.compile(r'Your (?P<beast>.+) is (?P<loyalty>\w+) '
                               r'and wants to learn more about your clan\.')
 
@@ -176,8 +177,8 @@ class PetFamiliars(FrBase):
                                                familiar_name, True)
                 if result["msg"] == "not equipped":
                     self.error("Error: Tried to equip familiar '" +
-                                     str((familiar_id, familiar_name)) +
-                                     "' but still failed to 'pet'")
+                               str((familiar_id, familiar_name)) +
+                               "' but still failed to 'pet'")
 
         # need to visit the dragon page first for some reason
         # will only be 'caught' and executed, if just equipped the new

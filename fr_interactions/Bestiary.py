@@ -117,6 +117,8 @@ class Bestiary(FrBase):
     def print_beasts_breakdown(self, this_breakdown=None):
         """Print the breakdown of awakened, locked, taming & total.
 
+        :param dict this_breakdown: dict of lists of a particular breakdown
+            to print out
         :return:
         """
         if this_breakdown:

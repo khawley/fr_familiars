@@ -15,8 +15,8 @@ class DragonLair(FrBase):
     dragon_url_patt = re.compile(r'main\.php\?p=lair(?:&|&amp;)id=(?:\d+)'
                                  r'(?:&|&amp;)tab=dragon(?:&|&amp;)'
                                  r'did=(?P<dragon_id>\d+)')
-    familiar_equipped_patt = re.compile(r'\/images\/icons\/famicon\.png')
-    familiar_img_patt = re.compile(r'familiar\/(?:\w+)\/'
+    familiar_equipped_patt = re.compile(r'/images/icons/famicon\.png')
+    familiar_img_patt = re.compile(r'familiar/(?:\w+)/'
                                    r'(?P<familiar_id>\d+)\.png')
 
     lair_max_page = 1
@@ -78,7 +78,7 @@ class DragonLair(FrBase):
 
         if len(dragon_cards) != 15:
             self.error("Error: Something happened, did not find 15"
-                             " dragons on page")
+                       " dragons on page")
 
         for dragon_card in dragon_cards:
             result = {}
@@ -115,7 +115,7 @@ class DragonLair(FrBase):
         """
         self.echo("---- curling dragon id: " + str(dragon_id))
         dragon_html = self.curl(self.dragon_url + str(dragon_id),
-                                  self.send_headers)
+                                self.send_headers)
         self.echo(" -- parsing")
         fam_id = self.__parse_dragon_page(dragon_html)
         self.echo(" -- with familiar: " + str(fam_id), True)
@@ -147,7 +147,7 @@ class DragonLair(FrBase):
         :rtype: bool
         """
         return tag.has_attr("href") and \
-               re.search(self.lair_url_patt, tag.attrs["href"])
+            re.search(self.lair_url_patt, tag.attrs["href"])
 
     def __locate_familiar_equipped_img(self, tag):
         """
@@ -158,4 +158,4 @@ class DragonLair(FrBase):
         :rtype: bool
         """
         return tag.has_attr("src") and \
-               re.search(self.familiar_equipped_patt, tag.attrs["src"])
+            re.search(self.familiar_equipped_patt, tag.attrs["src"])
