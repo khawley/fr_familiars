@@ -1,9 +1,8 @@
-from MyCurl import MyCurl
 from bs4 import BeautifulSoup
-from bs4.element import NavigableString
 import re
 import sys
-from HTMLParser import HTMLParser
+
+from MyCurl import MyCurl
 
 
 class DragonLair:
@@ -11,7 +10,7 @@ class DragonLair:
     Class to list all dragons in lair, and associated familiars
     """
 
-    #regex globals
+    # regex globals
     lair_url_patt = re.compile(r'main\.php\?p=lair(?:&|&amp;)id=(?:\d+)'
                                r'(?:&|&amp;)page=(\d+)')
     dragon_url_patt = re.compile(r'main\.php\?p=lair(?:&|&amp;)id=(?:\d+)'
