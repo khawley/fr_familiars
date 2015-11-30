@@ -5,13 +5,14 @@ import re
 from HTMLParser import HTMLParser
 from Echo import Echo
 
+
 class Bestiary:
     """
     Class to curl bestiary pages and return results of beasts
     """
 
     # regex patterns, compiled on init for time/memory saving
-    img_patt = re.compile(r'\/(?P<beast_id>[\d]+)(?:_gray)?\.png')
+    img_patt = re.compile(r'/(?P<beast_id>[\d]+)(?:_gray)?\.png')
     name_patt = re.compile(r'^\n(?P<name>[\w\s\-\'\*]+)\n'
                            r'(?P<description>(?:\n|.)*)\n$', re.UNICODE)
     loyalty_patt = re.compile(r'^(?P<loyalty>[\w]+)$')
@@ -22,7 +23,8 @@ class Bestiary:
     beasts = []  # list of all beasts in the bestiary
     beasts_breakdown = {}  # dict based on 'taming', 'awakened', &  'locked'
 
-    def __init__(self, fr_cookie, pages=None, bestiary_breakdown=None, verbose=False):
+    def __init__(self, fr_cookie, pages=None, bestiary_breakdown=None,
+                 verbose=False):
         """
         :param string fr_cookie: Cookie that has login information
         :param int pages: Number of pages from 1 to 'pages' to parse
@@ -277,7 +279,7 @@ class Bestiary:
         else:
             to_search = self.beasts
         return next((beast for beast in to_search
-                if beast["id"] == beast_id), {})
+                     if beast["id"] == beast_id), {})
 
     def get_beast_name_by_id(self, beast_id, key=None):
         """
