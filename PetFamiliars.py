@@ -91,7 +91,7 @@ class PetFamiliars:
         :return:
         """
         if not self.bestiary_breakdown:
-            sys.stderr.write("Error: Please set bestiary_breakdown\n")
+            self.error("Error: Please set bestiary_breakdown", True)
             return
 
         beasts_to_pet = self.bestiary_breakdown["taming"]
@@ -121,7 +121,7 @@ class PetFamiliars:
         :return:
         """
         if not self.taming_results:
-            sys.stderr.write("Error: No taming_results to breakdown")
+            self.error("Error: No taming_results to breakdown")
             return
 
         gold_chests = []
@@ -206,7 +206,7 @@ class PetFamiliars:
                 result = self.pet_one_familiar(familiar_id,
                                                familiar_name, True)
                 if result["msg"] == "not equipped":
-                    sys.stderr.write("Error: Tried to equip familiar '" +
+                    self.error("Error: Tried to equip familiar '" +
                                      str((familiar_id, familiar_name)) +
                                      "' but still failed to 'pet'")
 
