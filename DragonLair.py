@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import re
 import sys
 
+from Echo import Echo
 from MyCurl import MyCurl
 
 
@@ -32,7 +33,17 @@ class DragonLair:
         """
         self.lair_id = str(lair_id)
         self.fr_cookie = fr_cookie
-        self.verbose = verbose
+
+        # use Echo class 'echo' function, of echo(msg, newline)
+        self._verbose = verbose
+        self.echo = Echo(verbose).echo
+        self.error = Echo(verbose).error
+
+        self.lair_url = "http://flightrising.com/main.php?p=lair&id=" + \
+                        self.lair_id + "&page="
+        self.dragon_url = "http://flightrising.com/main.php?p=lair&id=" + \
+                          self.lair_id + "&tab=dragon&did="
+
         self.send_headers = [
             'Accept-Language: en-US,en;q=0.8',
             'User-Agent: Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0',
@@ -40,22 +51,18 @@ class DragonLair:
             'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
             self.fr_cookie,
         ]
-        self.lair_url = "http://flightrising.com/main.php?p=lair&id=" +\
-                        self.lair_id + "&page="
-        self.dragon_url = "http://flightrising.com/main.php?p=lair&id=" + \
-                          self.lair_id + "&tab=dragon&did="
 
-    def echo(self, msg, newline=False):
-        """
-        If verbose, print the msg.
-        :param string msg: String to be printed
-        :param bool newline: Whether to add a newline after msg
-        :return:
-        """
-        if newline:
-            msg += "\n"
-        if self.verbose:
-            sys.stdout.write(msg)
+    @property
+    def verbose(self):
+        return self._verbose
+
+    @verbose.setter
+    def verbose(self, verbose=""):
+        # use Echo class 'echo' function, of echo(msg, newline)
+        if verbose:
+            self._verbose = verbose
+            self.echo = Echo(verbose).echo
+            self.error = Echo(verbose).error
 
     def get_list(self):
         """
