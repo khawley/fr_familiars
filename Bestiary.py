@@ -2,9 +2,8 @@ from MyCurl import MyCurl
 from bs4 import BeautifulSoup
 from bs4.element import NavigableString
 import re
-import sys
 from HTMLParser import HTMLParser
-
+from Echo import Echo
 
 class Bestiary:
     """
@@ -36,7 +35,11 @@ class Bestiary:
         if bestiary_breakdown:
             self.beasts = [v for k in bestiary_breakdown
                            for v in bestiary_breakdown[k]]
-        self.verbose = verbose
+
+        # use Echo class 'echo' function, of echo(msg, newline)
+        self._verbose = verbose
+        self.echo = Echo(verbose).echo
+        self.error = Echo(verbose).error
 
         # must have User-Agent set
         self.send_headers = [
@@ -47,17 +50,17 @@ class Bestiary:
             self.fr_cookie,
         ]
 
-    def echo(self, msg, newline=False):
-        """
-        If verbose, print the msg.
-        :param string msg: String to be printed
-        :param bool newline: Whether to add a newline after msg
-        :return:
-        """
-        if newline:
-            msg += "\n"
-        if self.verbose:
-            sys.stdout.write(msg)
+    @property
+    def verbose(self):
+        return self._verbose
+
+    @verbose.setter
+    def verbose(self, verbose=""):
+        # use Echo class 'echo' function, of echo(msg, newline)
+        if verbose:
+            self._verbose = verbose
+            self.echo = Echo(verbose).echo
+            self.error = Echo(verbose).error
 
     def get_all(self):
         """
