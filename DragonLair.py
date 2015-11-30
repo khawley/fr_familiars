@@ -1,6 +1,5 @@
 from bs4 import BeautifulSoup
 import re
-import sys
 
 from Echo import Echo
 from MyCurl import MyCurl
@@ -104,7 +103,7 @@ class DragonLair:
         dragon_cards = soup.select(".dragoncard")
 
         if len(dragon_cards) != 15:
-            sys.stderr.write("Error: Something happened, did not find 15"
+            self.error("Error: Something happened, did not find 15"
                              " dragons on page")
 
         for dragon_card in dragon_cards:
