@@ -19,7 +19,7 @@ The easiest way to get your Flight Rising Cookie, in Chrome, is to navigate to y
 ** Don't grab a Cookie set from the www1 domain.  It may not work with the python script. (You should see a PHPSESSID as part of the Cookie string if you are on the correct domain.)
 
 ## Running it
-Once you have **settings_example.py** setup and your Cookie in it, you can use **pet_my_familiars.py** to pet all your familiars.
+Once you have **settings.py** setup and your Cookie in it, you can use **pet_my_familiars.py** to pet all your familiars.
     
     >> python pet_my_famliars
 
