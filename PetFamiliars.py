@@ -1,6 +1,5 @@
-import re
-import sys
 from bs4 import BeautifulSoup
+import re
 
 from Echo import Echo
 from MyCurl import MyCurl

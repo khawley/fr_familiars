@@ -1,9 +1,10 @@
-from MyCurl import MyCurl
+import re
 from bs4 import BeautifulSoup
 from bs4.element import NavigableString
-import re
 from HTMLParser import HTMLParser
+
 from Echo import Echo
+from MyCurl import MyCurl
 
 
 class Bestiary(object):
