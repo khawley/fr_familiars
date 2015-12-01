@@ -12,7 +12,7 @@ class FrBase(object):
         """
 
         :param string fr_cookie: Cookie that has login information
-        :param bool verbosity: How verbose to be:
+        :param int verbosity: How verbose to be:
             0 - do not print echo statements
             1 - print echo statments
             2 - print echo + curl statements

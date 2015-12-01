@@ -26,11 +26,13 @@ VERBOSITY = 1
 if FULL_RUN or not DRAGON_LIST:
     D = DragonLair(LAIR_ID, FR_COOKIE, verbosity=VERBOSITY)
     DRAGON_LIST = D.get_list()
+    print "DRAGON_LIST =", DRAGON_LIST
 
 # get a dict with all your familiars and their current loyalty status
 if FULL_RUN or not BESTIARY_BREAKDOWN:
     B = Bestiary(fr_cookie=FR_COOKIE, verbosity=VERBOSITY)
     BESTIARY_BREAKDOWN = B.get_all()
+    print "BESTIARY_BREAKDOWN =", BESTIARY_BREAKDOWN
 
 # pets all your currently being tamed familiars & prints the results
 pf = PetFamiliars(fr_cookie=FR_COOKIE,

@@ -30,7 +30,7 @@ class Bestiary(FrBase):
         :param int pages: Number of pages from 1 to 'pages' to parse
         :param dict bestiary_breakdown: pass in a dict of lists that was
             built previously
-        :param bool verbosity: How verbose to be:
+        :param int verbosity: How verbose to be:
             0 - do not print echo statements
             1 - print echo statments
             2 - print echo + curl statements

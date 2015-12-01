@@ -43,7 +43,7 @@ class PetFamiliars(FrBase):
         :param list dragon_list: list from DragonLair class
         :param bool pet_awakened: whether to also pet awakened familiars (must
             be in Hoard, not Vault)
-        :param bool verbosity: How verbose to be:
+        :param int verbosity: How verbose to be:
             0 - do not print echo statements
             1 - print echo statments
             2 - print echo + curl statements
