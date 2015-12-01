@@ -49,6 +49,7 @@ class Bestiary(FrBase):
         :return: dict of lists, of all beasts
         :rtype: dict
         """
+        self.beasts = []  # do not want to add the results in twice
         for i in range(1, self.pages + 1):
             self.beasts += self.__get_page(i)
         self.beasts_breakdown = self.__breakdown_beasts()

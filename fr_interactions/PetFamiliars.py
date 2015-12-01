@@ -67,6 +67,7 @@ class PetFamiliars(FrBase):
             self.error("Error: Please set bestiary_breakdown", True)
             return
 
+        self.taming_results = []  # do not want to add the results in twice
         beasts_to_pet = self.bestiary_breakdown["taming"]
 
         if self.pet_awakened:

@@ -47,6 +47,7 @@ class DragonLair(FrBase):
         :return: list of dragons
         :rtype: list
         """
+        self.dragons = []  # do not want to add the results in twice
         i = 1
         while i <= self.lair_max_page:
             self.echo("+ curling lair page: " + str(i))
