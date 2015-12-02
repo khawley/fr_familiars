@@ -317,8 +317,10 @@ class Bestiary(FrBase):
         :return: dict of the familiar
         :rtype: dict
         """
-        if key and key in self.beasts_breakdown:
+        if self.beasts_breakdown and key in self.beasts_breakdown:
             to_search = self.beasts_breakdown[key]
+        elif key and not self.beasts_breakdown:
+            return {}
         else:
             to_search = self.beasts
         return next((beast for beast in to_search
