@@ -32,6 +32,7 @@ class PetFamiliars(FrBase):
 
     def __init__(self, fr_cookie, equip_dragon=None,
                  bestiary_breakdown=None, dragon_list=None,
+                 unequip_awakened=True, equip_next_after_awakening=True,
                  pet_awakened=False, verbosity=False):
         """
         Setup class with initial variables
@@ -41,16 +42,21 @@ class PetFamiliars(FrBase):
             hoard to
         :param dict bestiary_breakdown: dict of lists from Bestiary class
         :param list dragon_list: list from DragonLair class
+        :param bool unequip_awakened: whether to unequip familiar if it awakens
+        :param bool equip_next_after_awakening: whether to equip the next familiar
+            to the recently awakened familiar's dragon
         :param bool pet_awakened: whether to also pet awakened familiars (must
             be in Hoard, not Vault)
         :param int verbosity: How verbose to be:
             0 - do not print echo statements
-            1 - print echo statments
+            1 - print echo statements
             2 - print echo + curl statements
         :return:
         """
         FrBase.__init__(self, fr_cookie, verbosity)
         self.equip_dragon = str(equip_dragon)
+        self.unequip_awakened = unequip_awakened
+        self.equip_next_after_awakening = equip_next_after_awakening
         self.pet_awakened = pet_awakened
         self.bestiary_breakdown = bestiary_breakdown or {}
         self.dragons = dragon_list or []
@@ -170,7 +176,9 @@ class PetFamiliars(FrBase):
         if self.dragons and result.get("chest") == "gold":
             self.echo(" * returning familiar to hoard")
             dragon_id = self.__find_dragon_with_familiar(familiar_id)
-            if dragon_id:
+            result["dragon_id"] = dragon_id
+
+            if dragon_id and self.unequip_awakened:
                 self.dragons_to_equip.append(dragon_id)
                 self.__unequip_dragons_familiar(dragon_id)
 
@@ -217,7 +225,7 @@ class PetFamiliars(FrBase):
         :rtype: string
         """
         # if list of waiting dragons, pull from them first, then use default
-        if self.dragons_to_equip:
+        if self.dragons_to_equip and self.equip_next_after_awakening:
             self.echo(" ~ equipping to dragon from list")
             dragon_id = self.dragons_to_equip.pop()
         elif self.equip_dragon:
