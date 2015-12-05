@@ -22,7 +22,7 @@ class PetFamiliars(FrBase):
     loyalty_patt = re.compile(r'Your (?P<beast>.+) is (?P<loyalty>\w+) '
                               r'and wants to learn more about your clan\.')
 
-    # list of dragon_ids that had a familiar with gold chest that was removed,
+    # list of dragon_ids that had a familiar with gilded chest that was removed,
     # and are now waiting for a new familiar to be equipped
     dragons_to_equip = []
 
@@ -30,6 +30,7 @@ class PetFamiliars(FrBase):
     taming_results = []  # list of dicts, results of each familiar pet
     taming_breakdown = {}  # breakdown of taming_results
 
+    # todo: rename equip_dragon to default_equip_dragon
     def __init__(self, fr_cookie, equip_dragon=None,
                  bestiary_breakdown=None, dragon_list=None,
                  unequip_awakened=True, equip_next_after_awakening=True,
@@ -104,7 +105,7 @@ class PetFamiliars(FrBase):
             self.error("Error: No taming_results to breakdown")
             return
 
-        gold_chests = []
+        gilded_chests = []
         iron_chests = []
         rusted_chests = []
         failures = []
@@ -112,8 +113,8 @@ class PetFamiliars(FrBase):
         total_treasure = 0
         for result in self.taming_results:
             if result.get("chest", ""):
-                if result["chest"] == "gold":
-                    gold_chests.append(result)
+                if result["chest"] == "gilded":
+                    gilded_chests.append(result)
                 elif result["chest"] == "iron":
                     iron_chests.append(result)
                 elif result["chest"] == "rusted":
@@ -127,7 +128,7 @@ class PetFamiliars(FrBase):
                 successes.append(result)
 
         self.taming_breakdown = {
-            "gold_chests": gold_chests,
+            "gilded_chests": gilded_chests,
             "iron_chests": iron_chests,
             "rusted_chests": rusted_chests,
             "failures": failures,
@@ -143,11 +144,11 @@ class PetFamiliars(FrBase):
         if not self.taming_breakdown:
             self.__breakdown_taming_results()
 
-        if self.taming_breakdown["gold_chests"]:
-            print "gold_chests:", len(self.taming_breakdown["gold_chests"]),
-            print "-", self.taming_breakdown["gold_chests"]
+        if self.taming_breakdown["gilded_chests"]:
+            print "gilded_chests:", len(self.taming_breakdown["gilded_chests"]),
+            print "-", self.taming_breakdown["gilded_chests"]
         else:
-            print "gold_chests: 0"
+            print "gilded_chests: 0"
         print "iron_chests:", len(self.taming_breakdown["iron_chests"])
         print "rusted_chests:", len(self.taming_breakdown["rusted_chests"])
         print "total_treasure:", self.taming_breakdown["total_treasure"]
@@ -172,8 +173,8 @@ class PetFamiliars(FrBase):
         result = self.__parse_response_familiar_bonding(
             self.curl(url, self.send_headers, {"id": familiar_id}))
 
-        # got a gold chest, so unequip familiar, and add dragon to equip list
-        if self.dragons and result.get("chest") == "gold":
+        # got a gilded chest, so unequip familiar, and add dragon to equip list
+        if self.dragons and result.get("chest") == "gilded":
             self.echo(" * returning familiar to hoard")
             dragon_id = self.__find_dragon_with_familiar(familiar_id)
             result["dragon_id"] = dragon_id
@@ -246,7 +247,7 @@ class PetFamiliars(FrBase):
     def __unequip_dragons_familiar(self, dragon_id):
         """
         Using the dragon_id, remove the familiar, not replace it.  (Usually
-        result of a gold chest familiar)
+        result of a gilded chest familiar)
         :param string dragon_id: dragon id to remove familiar from
         :return: html body of unequip dragon's familiar
         :rtype: string
@@ -328,7 +329,7 @@ class PetFamiliars(FrBase):
             if match:
                 chest_id = match.group("chest_id")
                 if chest_id == "576":
-                    result["chest"] = "gold"
+                    result["chest"] = "gilded"
                 elif chest_id == "575":
                     result["chest"] = "iron"
                 elif chest_id == "574":
