@@ -84,10 +84,6 @@ class PetFamiliars(FrBase):
             self.echo("-- petting " + beast["name"])
             result = self.pet_one_familiar(beast["id"], beast["name"])
 
-            # add in id + name here, else results are unknown
-            result["id"] = beast["id"]
-            result["name"] = beast["name"]
-
             self.taming_results.append(result)
             chest = ""
             if result.get("chest"):
@@ -174,12 +170,13 @@ class PetFamiliars(FrBase):
             self.curl(url, self.send_headers, {"id": familiar_id}))
 
         # got a gilded chest, so unequip familiar, and add dragon to equip list
-        if self.dragons and result.get("chest") == "gilded":
-            self.echo(" * returning familiar to hoard")
+        if self.dragons:
             dragon_id = self.__find_dragon_with_familiar(familiar_id)
             result["dragon_id"] = dragon_id
 
-            if dragon_id and self.unequip_awakened:
+            if result.get("chest") == "gilded" and \
+                    dragon_id and self.unequip_awakened:
+                self.echo(" * returning familiar to hoard")
                 self.dragons_to_equip.append(dragon_id)
                 self.__unequip_dragons_familiar(dragon_id)
 
@@ -204,6 +201,9 @@ class PetFamiliars(FrBase):
                 result = self.pet_one_familiar(familiar_id,
                                                familiar_name, True)
 
+        # add in id + name here, else results are unknown
+        result["id"] = familiar_id
+        result["name"] = familiar_name
         return result
 
     def __visit_dragon(self, dragon_id):
