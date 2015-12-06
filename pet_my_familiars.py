@@ -39,6 +39,9 @@ pf = PetFamiliars(fr_cookie=FR_COOKIE,
                   equip_dragon=DRAGON_ID,
                   bestiary_breakdown=BESTIARY_BREAKDOWN,
                   dragon_list=DRAGON_LIST,
+                  unequip_awakened=True,
+                  equip_next_after_awakening=True,
+                  pet_awakened=False,
                   verbosity=VERBOSITY)
 pf.pet_my_familiars()
 pf.print_taming_breakdown()
