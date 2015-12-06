@@ -30,3 +30,8 @@ It is also set to do a full run, collecting all your dragons and all your beasts
 ## Errors...
 If it breaks or something goes wrong, send me an issue!  I'd like to fix it.
 
+## Version Changes
+**1.0.1:**
+
+ - added a level of verbosity to print statements
+ - stopped Bestiary and DragonLair from adding new and duplicate results to existing data
