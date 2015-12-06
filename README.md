@@ -31,7 +31,14 @@ It is also set to do a full run, collecting all your dragons and all your beasts
 If it breaks or something goes wrong, send me an issue!  I'd like to fix it.
 
 ## Version Changes
-**1.0.1:**
+**1.1**
+
+ - added new variables to PetFamiliars for options on handling newly awakened familiars
+    - `unequip_awakened`- if True, will unequip a newly awakened familiar.  False, leaves the familiar attached to its dragon
+    - `equip_next_after_awakening`- if True, and unequipping awakening, the original dragon will equip the next available familiar
+ - now petting familiars by order of _loyalty_, from Loyal to Wary.  This helps when `equip_next_after_awakening` is True
+
+**1.0.1**
 
  - added a level of verbosity to print statements
  - stopped Bestiary and DragonLair from adding new and duplicate results to existing data
