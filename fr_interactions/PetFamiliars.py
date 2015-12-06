@@ -29,6 +29,8 @@ class PetFamiliars(FrBase):
     bestiary_breakdown = {}  # dict of lists from Bestiary.get_all()
     taming_results = []  # list of dicts, results of each familiar pet
     taming_breakdown = {}  # breakdown of taming_results
+    TAMING_SORT_ORDER = ("Loyal", "Companion", "Inquisitive", "Relaxed", "Tolerant",
+                   "Wary")
 
     # todo: rename equip_dragon to default_equip_dragon
     def __init__(self, fr_cookie, equip_dragon=None,
@@ -75,7 +77,11 @@ class PetFamiliars(FrBase):
             return
 
         self.taming_results = []  # do not want to add the results in twice
-        beasts_to_pet = self.bestiary_breakdown["taming"]
+        # taming sorted by loyalty, with loyal to wary
+        beasts_to_pet = sorted(self.bestiary_breakdown["taming"],
+                               key=lambda x: (
+                                   self.TAMING_SORT_ORDER.index(x["loyalty"]),
+                                   x["name"]))
 
         if self.pet_awakened:
             beasts_to_pet += self.bestiary_breakdown["awakened"]
