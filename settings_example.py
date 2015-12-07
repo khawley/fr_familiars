@@ -48,3 +48,15 @@ DRAGON_LIST = []
     BESTIARY_BREAKDOWN = b.get_all()
 """
 BESTIARY_BREAKDOWN = {}
+
+
+"""
+  Optional: you might store your previously ocllected items here.  This cuts
+    down on url querying to flightrising.
+  Example Code to get dict:
+    # replace [int] with the number of chests to open
+    c = Chests(FR_COOKIE, gilded_qty=[int], iron_qty=[int], rusted_qty=[int])
+    c.open_all_chests()
+    ITEM_MAP = c.item_map
+"""
+ITEM_MAP = {}
