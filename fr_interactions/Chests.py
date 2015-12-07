@@ -89,7 +89,7 @@ class Chests(FrBase):
     def open_one_chest(self, chest_id):
         # list of results from ONE chest
         results = self.__parse_open_chest_response(
-            self.__curl_open_chest(chest_id))
+            self.__curl_open_chest(str(chest_id)))
 
         # add these results to the main dict for tallying
         for r in results:
