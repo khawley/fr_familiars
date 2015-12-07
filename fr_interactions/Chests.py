@@ -60,9 +60,14 @@ class Chests(FrBase):
         :return:
         """
         # if not quantity, go until there is no more
-        for i in xrange(0, quantity):
+        i = 0
+        while True:
             result = self.open_one_chest(GILDED_CHEST_ID)
             self.raw_results["gilded"].append(tuple(result))
+
+            i += 1
+            if i == quantity or not result:
+                break
 
     def open_iron_chests(self, quantity=0):
         """
@@ -71,9 +76,14 @@ class Chests(FrBase):
         :return:
         """
         # if not quantity, go until there is no more
-        for i in xrange(0, quantity):
+        i = 0
+        while True:
             result = self.open_one_chest(IRON_CHEST_ID)
             self.raw_results["iron"].append(tuple(result))
+
+            i += 1
+            if i == quantity or not result:
+                break
 
     def open_rusted_chests(self, quantity=0):
         """
@@ -82,9 +92,14 @@ class Chests(FrBase):
         :return:
         """
         # if not quantity, go until there is no more
-        for i in xrange(0, quantity):
+        i = 0
+        while True:
             result = self.open_one_chest(RUSTED_CHEST_ID)
             self.raw_results["rusted"].append(tuple(result))
+
+            i += 1
+            if i == quantity or not result:
+                break
 
     def open_one_chest(self, chest_id):
         # list of results from ONE chest
