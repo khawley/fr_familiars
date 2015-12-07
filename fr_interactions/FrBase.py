@@ -63,6 +63,7 @@ class FrBase(object):
 
         c = pycurl.Curl()
         c.setopt(pycurl.URL, url)
+        send_headers = send_headers or self.send_headers
         if send_headers:
             c.setopt(pycurl.HTTPHEADER, send_headers)
         if post_data and type(post_data) is dict:
