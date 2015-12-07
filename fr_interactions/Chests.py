@@ -19,7 +19,7 @@ class Chests(FrBase):
     treasure_pile_img_patt = re.compile(r"treasure_pile")
     gem_pile_img_patt = re.compile(r"gem_pile")
     item_ajax_response_patt = re.compile(r'(?P<item_name>[\w ]+)\s+'
-                                         r'(?P<item_type>\S+)\s+'
+                                         r'(?P<item_type>[\w ]+)\s+'
                                          r'(?P<item_description>[^\n]+)\s+'
                                          r'Sell Value: (?P<sell_value>\d+)')
 
