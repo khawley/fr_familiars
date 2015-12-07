@@ -18,8 +18,9 @@ class Chests(FrBase):
                                     r"&tab=(?P<item_type>\w+)")
     treasure_pile_img_patt = re.compile(r"treasure_pile")
     gem_pile_img_patt = re.compile(r"gem_pile")
-    item_ajax_response_patt = re.compile(r'(?P<item_name>[\w\s]+)[\n\r\t]+'
-                                         r'(?P<item_type>[^\n]+)[\n\t\r]+'
+    item_ajax_response_patt = re.compile(r'(?P<item_name>[\w ]+)\s+'
+                                         r'(?P<item_type>\S+)\s+'
+                                         r'(?P<item_description>[^\n]+)\s+'
                                          r'Sell Value: (?P<sell_value>\d+)')
 
     def __init__(self, fr_cookie, gilded_qty=0, iron_qty=0,
@@ -128,7 +129,7 @@ class Chests(FrBase):
             a_tag = span.find("a")
             if a_tag:
                 match = re.search(self.item_ajax_url_patt,
-                              a_tag.attrs.get("rel", ""))
+                                  a_tag.attrs.get("rel", [""])[0])
                 if match:
                     result = self.__get_item_name(match.group("item_id"),match.group("item_type"))
                     result["quantity"] = quantity
@@ -184,6 +185,7 @@ class Chests(FrBase):
             }
             # add to internal dict for quicker querying next time
             self.item_map[item_id] = result
+            return result
         return {}
 
     def print_chest_results(self):
