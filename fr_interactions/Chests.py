@@ -7,10 +7,11 @@ from fr_interactions.fr_constants import GILDED_CHEST_ID, IRON_CHEST_ID,\
 
 
 class Chests(FrBase):
-    all_chest_results = {}
-    raw_results = {"gilded": [], "iron": [], "rusted": []}
-    item_map = {}
-    item_totals = {}
+    """
+    Class built to open all, some or one treasure chest, as specified by the
+    function calls.  Also uses ITEM_MAP to keep track of all items seen thus
+    far. Cuts down on querying time to flightrising to get item names.
+    """
 
     # regex patterns
     item_ajax_url_patt = re.compile(r"includes/itemajax\.php\?"
@@ -22,6 +23,11 @@ class Chests(FrBase):
                                          r'(?P<item_type>.+)\s+'
                                          r'(?P<item_description>[^\n]+)\s+'
                                          r'Sell Value: (?P<sell_value>\d+)')
+
+    all_chest_results = {}
+    raw_results = {"gilded": [], "iron": [], "rusted": []}
+    item_map = {}
+    item_totals = {}
 
     def __init__(self, fr_cookie, gilded_qty=0, iron_qty=0,
                  rusted_qty=0, item_map=None, verbosity=0):
@@ -49,14 +55,19 @@ class Chests(FrBase):
         FrBase.__init__(self, fr_cookie, verbosity)
 
     def open_all_chests(self):
+        """
+        Cycle through all 3 types of chests and open them, if any.
+        :return:
+        """
         self.open_gilded_chests(self.gilded_qty)
         self.open_iron_chests(self.iron_qty)
         self.open_rusted_chests(self.rusted_qty)
 
     def open_gilded_chests(self, quantity=0):
         """
-
-        :param int quantity:
+        Open all gilded chests up to quantity, or until no more if quantity=0.
+        Appends results to self.raw_results["gilded"]
+        :param int quantity: number of gilded chests to try to open.
         :return:
         """
         # if not quantity, go until there is no more
@@ -72,8 +83,9 @@ class Chests(FrBase):
 
     def open_iron_chests(self, quantity=0):
         """
-
-        :param int quantity:
+        Open all gilded chests up to quantity, or until no more if quantity=0.
+        Appends results to self.raw_results["iron"]
+        :param int quantity: number of iron chests to try to open
         :return:
         """
         # if not quantity, go until there is no more
@@ -89,8 +101,9 @@ class Chests(FrBase):
 
     def open_rusted_chests(self, quantity=0):
         """
-
-        :param int quantity:
+        Open all rusted chests up to quantity, or until no more if quantity=0.
+        Appends results to self.raw_results["rusted"]
+        :param int quantity: number of rusted chests to try to open.
         :return:
         """
         # if not quantity, go until there is no more
@@ -105,6 +118,13 @@ class Chests(FrBase):
                 break
 
     def open_one_chest(self, chest_id):
+        """
+        Open a single chest with specified id.
+        :param chest_id:
+        :return: list of result dicts from self.__parse_open_chest_response
+            ex: [{"id":...,"type":...,"qty":...,"name":...},...]
+        :rtype: list
+        """
         # list of results from ONE chest
         results = self.__parse_open_chest_response(
             self.__curl_open_chest(str(chest_id)))
@@ -117,7 +137,7 @@ class Chests(FrBase):
 
     def __curl_open_chest(self, chest_id):
         """
-
+        Curl to open one chest with the specified id.
         :param chest_id:
         :return: html from curl
         :rtype: str
@@ -131,7 +151,8 @@ class Chests(FrBase):
 
     def __parse_open_chest_response(self, html):
         """
-
+        Given the html result of curling to open a chest, parse out the
+        response for the various items retrieved from opening the chest
         :param str html:
         :return: list of result dicts
             ex: [{"id":...,"type":...,"qty":...,"name":...},...]
@@ -207,6 +228,11 @@ class Chests(FrBase):
         return {}
 
     def print_chest_results(self):
+        """
+        Based on the internally updated self.item_totals, print out the sorted
+        results of all items (and treasure) gained from chests.
+        :return:
+        """
         # make item_map only from item_totals, sort by type
         sorted_item_map = sorted([self.item_map[item_id]
                                   for item_id in self.item_totals.keys()
