@@ -1,6 +1,6 @@
 import sys
 
-from fr_interactions import Bestiary, DragonLair, PetFamiliars
+from fr_interactions import Bestiary, DragonLair, PetFamiliars, Chests
 
 try:
     from settings import FR_COOKIE, DRAGON_ID, \
@@ -18,8 +18,10 @@ if not FR_COOKIE:
 
 # adjust your verbosity here,
 # and whether you want to force the DragonLair & Bestiary
-FULL_RUN = True
+# and whether to open chests after petting familiars
 VERBOSITY = 1
+FULL_RUN = True
+OPEN_CHESTS_AFTER = True
 
 
 # gets a list of all your dragons, and their equipped familiars
@@ -45,3 +47,7 @@ pf = PetFamiliars(fr_cookie=FR_COOKIE,
                   verbosity=VERBOSITY)
 pf.pet_my_familiars()
 pf.print_taming_breakdown()
+
+if OPEN_CHESTS_AFTER:
+    C = Chests(FR_COOKIE, verbosity=VERBOSITY)
+    C.open_all_chests()
