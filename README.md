@@ -31,6 +31,11 @@ It is also set to do a full run, collecting all your dragons and all your beasts
 If it breaks or something goes wrong, send me an issue!  I'd like to fix it.
 
 ## Version Changes
+**1.2**
+
+ - added new class `Chests` that will open all chests (rusted, iron or gilded) in your hoard.
+ - settings file now includes `ITEM_MAP` to help with querying chest items
+
 **1.1**
 
  - added new variables to PetFamiliars for options on handling newly awakened familiars
