@@ -195,11 +195,13 @@ class Chests(FrBase):
 
         return this_rewards
 
-    def __get_item_name(self, item_id, item_type):
+    def __get_item_name(self, item_id, item_ajax_type):
         """
-
+        Retrieve item name from item_id & item_ajax_type form ITEM_MAP, or if
+        not found, curl the itemajax for name and description.  Store result
+        in ITEM_MAP.
         :param str item_id: id of the item
-        :param str item_type: type as specified in the ajax url
+        :param str item_ajax_type: type as specified in the ajax url
             (may not match actual type, ex: equipment & apparel)
         :return: dict of ajaxed results - id, name, type, ajax_url or {}
         :rtype: dict
@@ -210,7 +212,7 @@ class Chests(FrBase):
 
         # query the itemajax for the name + description
         url = "https://flightrising.com/includes/itemajax.php?id=" + \
-              item_id + "&tab=" + item_type
+              item_id + "&tab=" + item_ajax_type
 
         soup = BeautifulSoup(self.curl(url), "html.parser")
         m = re.search(self.item_ajax_response_patt, soup.text)
