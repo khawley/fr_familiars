@@ -18,8 +18,8 @@ class Chests(FrBase):
                                     r"&tab=(?P<item_type>\w+)")
     treasure_pile_img_patt = re.compile(r"treasure_pile")
     gem_pile_img_patt = re.compile(r"gem_pile")
-    item_ajax_response_patt = re.compile(r'(?P<item_name>[\w ]+)\s+'
-                                         r'(?P<item_type>[\w ]+)\s+'
+    item_ajax_response_patt = re.compile(r'(?P<item_name>.+)\s+'
+                                         r'(?P<item_type>.+)\s+'
                                          r'(?P<item_description>[^\n]+)\s+'
                                          r'Sell Value: (?P<sell_value>\d+)')
 
