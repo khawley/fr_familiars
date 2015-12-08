@@ -64,7 +64,8 @@ class Chests(FrBase):
         while True:
             result = self.open_one_chest(GILDED_CHEST_ID)
             self.raw_results["gilded"].append(tuple(result))
-
+            if result:
+                self.echo("-- opened gilded chest: "+str(result), True)
             i += 1
             if i == quantity or not result:
                 break
@@ -80,7 +81,8 @@ class Chests(FrBase):
         while True:
             result = self.open_one_chest(IRON_CHEST_ID)
             self.raw_results["iron"].append(tuple(result))
-
+            if result:
+                self.echo("-- opened iron chest: "+str(result), True)
             i += 1
             if i == quantity or not result:
                 break
@@ -96,7 +98,8 @@ class Chests(FrBase):
         while True:
             result = self.open_one_chest(RUSTED_CHEST_ID)
             self.raw_results["rusted"].append(tuple(result))
-
+            if result:
+                self.echo("-- opened rusted chest: "+str(result), True)
             i += 1
             if i == quantity or not result:
                 break
