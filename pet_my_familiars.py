@@ -26,17 +26,20 @@ OPEN_CHESTS_AFTER = True
 
 # gets a list of all your dragons, and their equipped familiars
 if FULL_RUN or not DRAGON_LIST:
+    print "## Querying Dragon Lair ##"
     D = DragonLair(LAIR_ID, FR_COOKIE, verbosity=VERBOSITY)
     DRAGON_LIST = D.get_list()
     print "DRAGON_LIST =", DRAGON_LIST
 
 # get a dict with all your familiars and their current loyalty status
 if FULL_RUN or not BESTIARY_BREAKDOWN:
+    print "## Querying Bestiary ##"
     B = Bestiary(fr_cookie=FR_COOKIE, verbosity=VERBOSITY)
     BESTIARY_BREAKDOWN = B.get_all()
     print "BESTIARY_BREAKDOWN =", BESTIARY_BREAKDOWN
 
 # pets all your currently being tamed familiars & prints the results
+print "## Petting Familiars ##"
 pf = PetFamiliars(fr_cookie=FR_COOKIE,
                   equip_dragon=DRAGON_ID,
                   bestiary_breakdown=BESTIARY_BREAKDOWN,
@@ -49,6 +52,7 @@ pf.pet_my_familiars()
 pf.print_taming_breakdown()
 
 if OPEN_CHESTS_AFTER:
+    print "# Opening Chests"
     C = Chests(FR_COOKIE, verbosity=VERBOSITY)
     C.open_all_chests()
     print "ITEM_MAP =", C.item_map
