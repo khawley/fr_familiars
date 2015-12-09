@@ -53,7 +53,9 @@ pf.print_taming_breakdown()
 
 if OPEN_CHESTS_AFTER:
     print "# Opening Chests"
-    C = Chests(FR_COOKIE, verbosity=VERBOSITY)
+    C = Chests(fr_cookie=FR_COOKIE,
+               only_open_specified=False,  # open all chests
+               verbosity=VERBOSITY)
     C.open_all_chests()
     print "ITEM_MAP =", C.item_map
     C.print_chest_results()

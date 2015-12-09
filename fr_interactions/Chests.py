@@ -30,12 +30,15 @@ class Chests(FrBase):
     item_totals = {}
 
     def __init__(self, fr_cookie, gilded_qty=0, iron_qty=0,
-                 rusted_qty=0, item_map=None, verbosity=0):
+                 rusted_qty=0, only_open_specified=True, item_map=None,
+                 verbosity=0):
         """
         :param str fr_cookie: Cookie that has login information
         :param int gilded_qty: number of gilded chests to open
         :param int iron_qty: number of iron chests to open
         :param int rusted_qty: number of rusted chests to open
+        :param only_open_specified: boolean whether to allow chests to be
+            opened without specified quantity
         :param dict item_map: map from previous run, dict of item_ids as keys,
             and descriptive dicts as values
         :param int verbosity: level of error messages to print
@@ -51,6 +54,7 @@ class Chests(FrBase):
         except ValueError:
             self.error("Error: parameters not of type int", True)
             exit()
+        self.only_open_specified = only_open_specified
         self.item_map = item_map or self.item_map
         FrBase.__init__(self, fr_cookie, verbosity)
 
@@ -70,7 +74,9 @@ class Chests(FrBase):
         :param int quantity: number of gilded chests to try to open.
         :return:
         """
-        # if not quantity, go until there is no more
+        if not quantity and self.only_open_specified:
+            return
+
         i = 0
         while True:
             result = self.open_one_chest(GILDED_CHEST_ID)
@@ -88,7 +94,9 @@ class Chests(FrBase):
         :param int quantity: number of iron chests to try to open
         :return:
         """
-        # if not quantity, go until there is no more
+        if not quantity and self.only_open_specified:
+            return
+
         i = 0
         while True:
             result = self.open_one_chest(IRON_CHEST_ID)
@@ -106,7 +114,9 @@ class Chests(FrBase):
         :param int quantity: number of rusted chests to try to open.
         :return:
         """
-        # if not quantity, go until there is no more
+        if not quantity and self.only_open_specified:
+            return
+
         i = 0
         while True:
             result = self.open_one_chest(RUSTED_CHEST_ID)
