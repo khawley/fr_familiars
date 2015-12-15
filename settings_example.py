@@ -51,7 +51,7 @@ BESTIARY_BREAKDOWN = {}
 
 
 """
-  Optional: you might store your previously ocllected items here.  This cuts
+  Optional: you might store your previously collected items here.  This cuts
     down on url querying to flightrising.
   Example Code to get dict:
     c = Chests(FR_COOKIE)
