@@ -260,8 +260,45 @@ class Bestiary(FrBase):
 
     def get_beast_by_id(self, beast_id, key=None):
         """
-        Searches all beasts and returns the dict of the beast_id
+        Uses self.__get_beast_by_field and returns the dict of the beast_id
         :param string beast_id: id of familiar to find
+        :param string key: key used to limit how much to search, will accept
+            "taming", "awakened", "locked" - the keys of
+            self.bestiary_breakdown
+        :return: dict of the familiar
+        :rtype: dict
+        """
+        return self.__get_beast_by_field("id", beast_id, key)
+
+    def get_beast_name_by_id(self, beast_id, key=None):
+        """
+        Uses self.__get_beast_by_field and returns just the name of beast
+        :param string beast_id: id of familiar to find
+        :param string key: key used to limit how much to search, will accept
+            "taming", "awakened", "locked" - the keys of
+            self.bestiary_breakdown
+        :return: name of the familiar
+        :rtype: string
+        """
+        return self.get_beast_by_id(beast_id, key).get("name", "")
+
+    def get_beast_by_name(self, beast_name, key=None):
+        """
+        Uses self.__get_beast_by_field and returns the dict of the beast_name
+        :param string beast_name: id of familiar to find
+        :param string key: key used to limit how much to search, will accept
+            "taming", "awakened", "locked" - the keys of
+            self.bestiary_breakdown
+        :return: dict of the familiar
+        :rtype: dict
+        """
+        return self.__get_beast_by_field("name", beast_name, key)
+
+    def __get_beast_by_field(self, field_name, field_value, key=None):
+        """
+        Searches all beasts and returns the dict of the found beast
+        :param string field_name: name of field to use a key to search by
+        :param string field_value: value of field to match on
         :param string key: key used to limit how much to search, will accept
             "taming", "awakened", "locked" - the keys of
             self.bestiary_breakdown
@@ -273,19 +310,7 @@ class Bestiary(FrBase):
         else:
             to_search = self.beasts
         return next((beast for beast in to_search
-                     if beast["id"] == beast_id), {})
-
-    def get_beast_name_by_id(self, beast_id, key=None):
-        """
-        Uses self.get_beast_by_id and returns just the name of beast
-        :param string beast_id: id of familiar to find
-        :param string key: key used to limit how much to search, will accept
-            "taming", "awakened", "locked" - the keys of
-            self.bestiary_breakdown
-        :return: name of the familiar
-        :rtype: string
-        """
-        return self.get_beast_by_id(beast_id, key).get("name", "")
+                     if beast[field_name] == field_value), {})
 
     @staticmethod
     def __locate_beast_image(tag):
