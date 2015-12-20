@@ -16,6 +16,8 @@ class Bestiary(FrBase):
     name_patt = re.compile(r'^\n(?P<name>[\w\s\-\'\*]+)\n'
                            r'(?P<description>(?:\n|.)*)\n$', re.UNICODE)
     loyalty_patt = re.compile(r'^(?P<loyalty>[\w]+)$')
+    bestiary_url_patt = re.compile(r'main\.php\?p=bestiary(?:&|&amp;)'
+                                   r'tab=familiars(?:&|&amp;)page=(\d+)')
 
     base_bestiary_url = "http://flightrising.com/main.php?" \
                         "p=bestiary&tab=familiars&page="
@@ -27,17 +29,17 @@ class Bestiary(FrBase):
                  verbosity=False):
         """
         :param string fr_cookie: Cookie that has login information
-        :param int pages: Number of pages from 1 to 'pages' to parse
+        :param int pages: DEPRECATED
         :param dict bestiary_breakdown: pass in a dict of lists that was
             built previously
         :param int verbosity: How verbose to be:
             0 - do not print echo statements
-            1 - print echo statments
+            1 - print echo statements
             2 - print echo + curl statements
         :return:
         """
         FrBase.__init__(self, fr_cookie, verbosity)
-        self.pages = pages or 43
+        self.max_bestiary_page = 1
         self.beasts_breakdown = bestiary_breakdown
         if bestiary_breakdown:
             self.beasts = [v for k in bestiary_breakdown
@@ -50,8 +52,12 @@ class Bestiary(FrBase):
         :rtype: dict
         """
         self.beasts = []  # do not want to add the results in twice
-        for i in range(1, self.pages + 1):
+
+        # max_bestiary_page is unset at the start of the function
+        i = 1
+        while i <= self.max_bestiary_page:
             self.beasts += self.__get_page(i)
+            i += 1
         self.beasts_breakdown = self.__breakdown_beasts()
         return self.beasts_breakdown
 
@@ -183,6 +189,12 @@ class Bestiary(FrBase):
         main_div = soup.select("#super-container")[0]
         this_div = list(main_div.children)[-2].find("div")
 
+        if self.max_bestiary_page == 1:
+            # max_pages has not been set yet.  Find that now
+            paging_tags = soup.find_all(self.__locate_bestiary_paging_url)
+            self.max_bestiary_page = max([int(i.text) for i in paging_tags
+                                          if i.text])
+
         # loop through each span, which contains 1 beast each
         for span in this_div.find_all("span"):
             kids = list(span.children)
@@ -284,3 +296,12 @@ class Bestiary(FrBase):
         :rtype: bool
         """
         return tag.has_attr("width") and tag.has_attr("height")
+
+    def __locate_bestiary_paging_url(self, tag):
+        """ Given a tag from BeautifulSoup, determine if it's a tag with an href matching the bestiary paging url pattern.
+        :param Tag tag: a tag from BeautifulSoup
+        :return: True/False
+        :rtype: bool
+        """
+        return tag.has_attr("href") and \
+               re.search(self.bestiary_url_patt, tag.attrs["href"])
