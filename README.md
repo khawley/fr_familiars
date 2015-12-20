@@ -33,7 +33,7 @@ If it breaks or something goes wrong, send me an issue!  I'd like to fix it.
 ## Version Changes
 **1.2.3**
 
- - *Bestiary* class no longer accepts `pages` as a variable on initilization.  Now, the logic to find the last bestiary page is done automatically (like in *DragonLair* class.
+ - *Bestiary* class has deprecated `pages` as a variable on initialization.  Now, the logic to find the last bestiary page is done automatically (like in *DragonLair* class).
 
 **1.2.2**
 
