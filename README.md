@@ -31,6 +31,14 @@ It is also set to do a full run, collecting all your dragons and all your beasts
 If it breaks or something goes wrong, send me an issue!  I'd like to fix it.
 
 ## Version Changes
+**1.2.3**
+
+ - *Bestiary* class no longer accepts `pages` as a variable on initilization.  Now, the logic to find the last bestiary page is done automatically (like in *DragonLair* class.
+
+**1.2.2**
+
+ - allows for non logged in state when gathering dragons from a lair
+
 **1.2.1**
 
  - added an init var to `Chests` to prevent auto opening all chests, unless explicitly passed.  `only_open_specified=True`
