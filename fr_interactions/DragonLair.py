@@ -10,7 +10,7 @@ class DragonLair(FrBase):
     """
 
     # regex globals
-    lair_url_patt = re.compile(r'main\.php\?p=lair(?:&|&amp;)id=(?:\d+)'
+    lair_url_patt = re.compile(r'main\.php\?p=(?:lair|view)(?:&|&amp;)id=(?:\d+)'
                                r'(?:&|&amp;)page=(\d+)')
     dragon_url_patt = re.compile(r'main\.php\?p=lair(?:&|&amp;)id=(?:\d+)'
                                  r'(?:&|&amp;)tab=dragon(?:&|&amp;)'
