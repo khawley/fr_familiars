@@ -51,7 +51,7 @@ class DragonLair(FrBase):
         i = 1
         while i <= self.lair_max_page:
             self.echo("+ curling lair page: " + str(i))
-            html = self.curl(self.lair_url + str(i), self.send_headers)
+            html = self.curl(self.lair_url + str(i))
 
             # confirm user is logged in
             # will continue unhindered regardless
@@ -122,8 +122,7 @@ class DragonLair(FrBase):
         :rtype: string
         """
         self.echo("---- curling dragon id: " + str(dragon_id))
-        dragon_html = self.curl(self.dragon_url + str(dragon_id),
-                                self.send_headers)
+        dragon_html = self.curl(self.dragon_url + str(dragon_id))
         self.echo(" -- parsing")
         fam_id = self.__parse_dragon_page(dragon_html)
         self.echo(" -- with familiar: " + str(fam_id), True)

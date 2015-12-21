@@ -59,12 +59,11 @@ class FrBase(object):
             msg += "\n"
         sys.stderr.write(msg)
 
-    def curl(self, url, send_headers=None, post_data=None, verbose=False):
+    def curl(self, url, post_data=None, verbose=False):
         """
         Originally a function using pycurl, it has been repurposed to use the
         requests library.
         :param str url:
-        :param dict send_headers: dict of headers, {"name": "value"} to send
         :param dict post_data: dict of post data, {"name": "value"} to send
         :param bool verbose: deprecated variable
         :return: html response
@@ -72,10 +71,12 @@ class FrBase(object):
         """
 
         # if passing in deprecated list, convert to dict
-        if type(send_headers) is list:
+        if type(self.send_headers) is list:
             # parse out the type by the colon
             send_headers = {item.split(":")[0]: item.split(":")[1].strip()
-                            for item in send_headers}
+                            for item in self.send_headers}
+        else:
+            send_headers = self.send_headers
 
         if post_data:
             response = requests.post(url, headers=send_headers, data=post_data)

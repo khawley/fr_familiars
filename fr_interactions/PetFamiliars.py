@@ -172,7 +172,7 @@ class PetFamiliars(FrBase):
         :rtype: dict
         """
         url = "http://flightrising.com/includes/ol/fam_bonding.php"
-        html = self.curl(url, self.send_headers, {"id": familiar_id})
+        html = self.curl(url, post_data={"id": familiar_id})
 
         # confirm user is logged in
         # must exit if not logged in
@@ -227,7 +227,7 @@ class PetFamiliars(FrBase):
         """
         url = "http://flightrising.com/main.php?p=lair&tab=dragon&did=" + \
               str(dragon_id)
-        return self.curl(url, self.send_headers)
+        return self.curl(url)
 
     def __equip_familiar(self, familiar_id):
         """
@@ -254,7 +254,7 @@ class PetFamiliars(FrBase):
         self.echo(" ~ equipping familiar")
         url = 'http://flightrising.com/includes/familiar_active.php?' \
               'id=' + str(dragon_id) + '&itm=' + str(familiar_id)
-        return self.curl(url, self.send_headers)
+        return self.curl(url)
 
     def __unequip_dragons_familiar(self, dragon_id):
         """
@@ -267,7 +267,7 @@ class PetFamiliars(FrBase):
         self.echo("~ unequipping dragon:" + str(dragon_id))
         url = "http://flightrising.com/includes/familiar_active.php?id=" + \
               str(dragon_id) + "&itm=0"
-        return self.curl(url, self.send_headers)
+        return self.curl(url)
 
     def __parse_response_familiar_bonding(self, html):
         """

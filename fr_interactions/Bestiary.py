@@ -71,7 +71,7 @@ class Bestiary(FrBase):
         """
         url = self.base_bestiary_url + str(page)
         self.echo("curling " + url)
-        html = self.curl(url, self.send_headers)
+        html = self.curl(url)
 
         # confirm user is logged in
         # will exit if not logged in.  (useless results when not logged in)
