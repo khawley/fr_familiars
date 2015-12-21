@@ -10,7 +10,7 @@
  Required: This is the login credentials for your account.
     DO NOT USE YOUR USERNAME & PASSWORD.  Grab the Cookie Header.
  Example:
-    'Cookie: PHPSESSID=askldfjlkanfln;'
+    'PHPSESSID=askldfjlkanfln;'
 """
 FR_COOKIE = ''
 

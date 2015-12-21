@@ -31,6 +31,11 @@ It is also set to do a full run, collecting all your dragons and all your beasts
 If it breaks or something goes wrong, send me an issue!  I'd like to fix it.
 
 ## Version Changes
+**1.3**
+
+ - No longer need to pass in the 'Cookie: ' part of the `FR_COOKIE` string.  (will be removed if you do)
+  - Now can pass in the `ITEM_MAP` to the Chests, so you can keep building it out, instead of building it once, then trashing it.
+
 **1.2.3**
 
  - *Bestiary* class has deprecated `pages` as a variable on initialization.  Now, the logic to find the last bestiary page is done automatically (like in *DragonLair* class).
