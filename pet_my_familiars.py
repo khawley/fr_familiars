@@ -11,7 +11,7 @@ except ImportError:
     exit()
 
 if not FR_COOKIE:
-    sys.stderr.write("*ERROR: Please add FR_COOKIE to inputs.py\n"
+    sys.stderr.write("*ERROR: Please add FR_COOKIE to settings.py\n"
                      "        See settings_example.py for help.\n")
     exit()
 
