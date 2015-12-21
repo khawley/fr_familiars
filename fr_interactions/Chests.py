@@ -1,5 +1,5 @@
-import re
 from bs4 import BeautifulSoup
+import re
 
 from fr_interactions.FrBase import FrBase
 from fr_interactions.fr_constants import GILDED_CHEST_ID, IRON_CHEST_ID,\

@@ -1,7 +1,8 @@
-import re
 from bs4 import BeautifulSoup
 from bs4.element import NavigableString
 from HTMLParser import HTMLParser
+import re
+
 
 from .FrBase import FrBase
 

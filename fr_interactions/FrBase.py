@@ -1,9 +1,6 @@
-import sys
-import re
-import requests
-from StringIO import StringIO
-from urllib import urlencode
 from bs4 import BeautifulSoup
+import requests
+import sys
 
 
 class FrBase(object):
