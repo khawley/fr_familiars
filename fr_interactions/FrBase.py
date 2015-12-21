@@ -1,6 +1,6 @@
 import sys
-import pycurl
 import re
+import requests
 from StringIO import StringIO
 from urllib import urlencode
 from bs4 import BeautifulSoup
@@ -60,41 +60,33 @@ class FrBase(object):
         sys.stderr.write(msg)
 
     def curl(self, url, send_headers=None, post_data=None, verbose=False):
-        response_buffer = StringIO()
-        self.response_headers = {}
+        """
+        Originally a function using pycurl, it has been repurposed to use the
+        requests library.
+        :param str url:
+        :param dict send_headers: dict of headers, {"name": "value"} to send
+        :param dict post_data: dict of post data, {"name": "value"} to send
+        :param bool verbose: deprecated variable
+        :return: html response
+        :rtype: str
+        """
 
-        c = pycurl.Curl()
-        c.setopt(pycurl.URL, url)
-        send_headers = send_headers or self.send_headers
-        if send_headers:
-            c.setopt(pycurl.HTTPHEADER, send_headers)
-        if post_data and type(post_data) is dict:
-            # post_data = {'field': 'value'}
-            # Form data must be provided already urlencoded.
-            postfields = urlencode(post_data)
-            # Sets request method to POST,
-            # Content-Type header to application/x-www-form-urlencoded
-            # and data to send in request body.
-            c.setopt(c.POSTFIELDS, postfields)
-        c.setopt(c.WRITEDATA, response_buffer)
-        c.setopt(c.HEADERFUNCTION, self.__header_function)
-        if verbose or self.verbosity >= 2:
-            c.setopt(c.VERBOSE, True)
-        c.perform()
-        c.close()
+        # if passing in deprecated list, convert to dict
+        if type(send_headers) is list:
+            # parse out the type by the colon
+            send_headers = {item.split(":")[0]: item.split(":")[1].strip()
+                            for item in send_headers}
 
-        encoding = None
-        if 'content-type' in self.response_headers:
-            content_type = self.response_headers['content-type'].lower()
-            match = re.search('charset=(\S+)', content_type)
-            if match:
-                encoding = match.group(1)
+        if post_data:
+            response = requests.post(url, headers=send_headers, data=post_data)
         else:
-            encoding = 'iso-8859-1'
+            response = requests.get(url, headers=send_headers)
 
-        body = response_buffer.getvalue()
-        # Decode using the encoding we figured out.
-        return body.decode(encoding)
+        if not response.ok:
+            self.error("Failed to make request to " + url, True)
+            exit()
+
+        return response.text
 
     def __header_function(self, header_line):
         # Header lines include the first status line (HTTP/1.x ...).
