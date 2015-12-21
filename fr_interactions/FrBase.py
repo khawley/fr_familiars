@@ -3,10 +3,12 @@ import pycurl
 import re
 from StringIO import StringIO
 from urllib import urlencode
+from bs4 import BeautifulSoup
 
 
 class FrBase(object):
     response_headers = {}
+    __is_logged_in = None
 
     def __init__(self, fr_cookie, verbosity=0):
         """
@@ -14,7 +16,7 @@ class FrBase(object):
         :param string fr_cookie: Cookie that has login information
         :param int verbosity: How verbose to be:
             0 - do not print echo statements
-            1 - print echo statments
+            1 - print echo statements
             2 - print echo + curl statements
         :return:
         """
@@ -116,3 +118,49 @@ class FrBase(object):
 
         # Now we can actually record the header name and value.
         self.response_headers[name] = value
+
+    def is_logged_in(self, html):
+        """
+        If not confirmed previously, check the html for the lack of #loginbar
+        in the #usertab.  If found, the cookie is not valid.  Check that cookie
+        like expected for the 'www.flightrising.com' domain.
+        Sets self.__is_logged_in when no #loginform is found.
+        :param str html: html from a query to request to flightrising
+        :return: True/False if logged
+        :rtype: bool
+        """
+
+        # have already established that the cookie is valid & user is logged in
+        if self.__is_logged_in is not None:
+            return self.__is_logged_in
+
+        # start with True, switch to False when proven wrong
+        self.__is_logged_in = True
+
+        soup = BeautifulSoup(html, "html.parser")
+        # html is actually a bit broken, so can't just search for #usertab :(
+        usertabs = [div for div in soup.find_all("div")
+                    if div.attrs.get("id", "") == "usertab"]
+        usertab = usertabs.pop() if usertabs else None
+
+        if not usertab:
+            # maybe it was renamed?
+            self.error("Cannot locate #usertab, may not be logged in.")
+            self.__is_logged_in = False
+
+        form = usertab.find("form") if usertab else None
+        if form and form.attrs.get("id", "") == "loginform":
+            # loginform was found, cookie is bad...
+            self.error("You are not logged in.  Please check your cookie.",
+                       True)
+            # check cookie for PHPSESSID
+            if "PHPSESSID" not in self.fr_cookie \
+                    and "fr_session" in self.fr_cookie:
+                self.error("Please confirm that you are using a cookie from "
+                           "flightrising.com, and not www1.flightrising.com",
+                           True)
+            self.__is_logged_in = False
+
+        # else
+        # found usertab, did not find loginbar.  You're logged in
+        return self.__is_logged_in

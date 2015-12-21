@@ -172,8 +172,14 @@ class PetFamiliars(FrBase):
         :rtype: dict
         """
         url = "http://flightrising.com/includes/ol/fam_bonding.php"
-        result = self.__parse_response_familiar_bonding(
-            self.curl(url, self.send_headers, {"id": familiar_id}))
+        html = self.curl(url, self.send_headers, {"id": familiar_id})
+
+        # confirm user is logged in
+        # must exit if not logged in
+        if not self.is_logged_in(html):
+            exit()
+
+        result = self.__parse_response_familiar_bonding(html)
 
         # got a gilded chest, so unequip familiar, and add dragon to equip list
         if self.dragons:

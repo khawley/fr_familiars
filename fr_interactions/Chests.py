@@ -136,8 +136,14 @@ class Chests(FrBase):
         :rtype: list
         """
         # list of results from ONE chest
-        results = self.__parse_open_chest_response(
-            self.__curl_open_chest(str(chest_id)))
+        html = self.__curl_open_chest(str(chest_id))
+
+        # confirm user is logged in
+        # must exit if not logged in
+        if not self.is_logged_in(html):
+            exit()
+
+        results = self.__parse_open_chest_response(html)
 
         # add these results to the main dict for tallying
         for r in results:

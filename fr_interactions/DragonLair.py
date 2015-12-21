@@ -52,6 +52,10 @@ class DragonLair(FrBase):
         while i <= self.lair_max_page:
             self.echo("+ curling lair page: " + str(i))
             html = self.curl(self.lair_url + str(i), self.send_headers)
+
+            # confirm user is logged in
+            # will continue unhindered regardless
+            self.is_logged_in(html)
             self.echo(" - parsing lair page", True)
             if not self.__parse_lair_page(html):
                 break
