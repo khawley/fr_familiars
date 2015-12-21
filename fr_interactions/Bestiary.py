@@ -35,7 +35,6 @@ class Bestiary(FrBase):
         :param int verbosity: How verbose to be:
             0 - do not print echo statements
             1 - print echo statements
-            2 - print echo + curl statements
         :return:
         """
         FrBase.__init__(self, fr_cookie, verbosity)

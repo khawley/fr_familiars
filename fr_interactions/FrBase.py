@@ -17,22 +17,21 @@ class FrBase(object):
         :param int verbosity: How verbose to be:
             0 - do not print echo statements
             1 - print echo statements
-            2 - print echo + curl statements
         :return:
         """
-        self.fr_cookie = fr_cookie
+        self.fr_cookie = fr_cookie.replace("Cookie: ",  "")
         self.verbosity = verbosity
 
         # must have User-Agent set
-        self.send_headers = [
-            'Origin: http://flightrising.com',
-            'Accept-Language: en-US,en;q=0.8',
-            'User-Agent: Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0',
-            'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
-            'Upgrade-Insecure-Requests: 1',
-            'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            self.fr_cookie,
-        ]
+        self.send_headers = {
+            'Origin': 'http://flightrising.com',
+            'Accept-Language': 'en-US,en;q=0.8',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0',
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            'Upgrade-Insecure-Requests': '1',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'Cookie': self.fr_cookie,
+        }
 
     def echo(self, msg, newline=False, verbose=False):
         """
@@ -59,13 +58,12 @@ class FrBase(object):
             msg += "\n"
         sys.stderr.write(msg)
 
-    def curl(self, url, post_data=None, verbose=False):
+    def curl(self, url, post_data=None):
         """
         Originally a function using pycurl, it has been repurposed to use the
         requests library.
         :param str url:
         :param dict post_data: dict of post data, {"name": "value"} to send
-        :param bool verbose: deprecated variable
         :return: html response
         :rtype: str
         """
