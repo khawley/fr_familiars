@@ -42,8 +42,8 @@ If it breaks or something goes wrong, send me an issue!  I'd like to fix it.
 **1.3**
 
  - No longer need to pass in the 'Cookie: ' part of the `FR_COOKIE` string.  (will be removed if you do)
-  - Now can pass in the `ITEM_MAP` to the Chests, so you can keep building it out, instead of building it once, then trashing it.
-  - Will check to confirm that the script is receiving a 'logged in' response.  This check makes sure there is no login form showing.  Is not perfect (example: PetFamiliars) when dependent on partial ajax responses.
+ - Now can pass in the `ITEM_MAP` to the Chests, so you can keep building it out, instead of building it once, then trashing it.
+ - Will check to confirm that the script is receiving a 'logged in' response.  This check makes sure there is no login form showing.  Is not perfect (example: PetFamiliars) when dependent on partial ajax responses.
 
 **1.2.3**
 
