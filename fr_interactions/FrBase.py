@@ -124,11 +124,6 @@ class FrBase(object):
                     if div.attrs.get("id", "") == "usertab"]
         usertab = usertabs.pop() if usertabs else None
 
-        if not usertab:
-            # maybe it was renamed?
-            self.error("Cannot locate #usertab, may not be logged in.")
-            self.__is_logged_in = False
-
         form = usertab.find("form") if usertab else None
         if form and form.attrs.get("id", "") == "loginform":
             # loginform was found, cookie is bad...
@@ -144,4 +139,5 @@ class FrBase(object):
 
         # else
         # found usertab, did not find loginbar.  You're logged in
+        # or is a partial html response, due to an ajax request
         return self.__is_logged_in
