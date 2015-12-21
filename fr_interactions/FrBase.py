@@ -68,18 +68,11 @@ class FrBase(object):
         :rtype: str
         """
 
-        # if passing in deprecated list, convert to dict
-        if type(self.send_headers) is list:
-            # parse out the type by the colon
-            send_headers = {item.split(":")[0]: item.split(":")[1].strip()
-                            for item in self.send_headers}
-        else:
-            send_headers = self.send_headers
-
         if post_data:
-            response = requests.post(url, headers=send_headers, data=post_data)
+            response = requests.post(url, headers=self.send_headers,
+                                     data=post_data)
         else:
-            response = requests.get(url, headers=send_headers)
+            response = requests.get(url, headers=self.send_headers)
 
         if not response.ok:
             self.error("Failed to make request to " + url, True)
