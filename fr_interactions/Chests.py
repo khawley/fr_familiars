@@ -251,6 +251,10 @@ class Chests(FrBase):
         results of all items (and treasure) gained from chests.
         :return:
         """
+        if not self.item_totals:
+            print "No chests opened"
+            return
+
         # make item_map only from item_totals, sort by type
         sorted_item_map = sorted([self.item_map[item_id]
                                   for item_id in self.item_totals.keys()
