@@ -36,6 +36,8 @@ if FULL_RUN or not BESTIARY_BREAKDOWN:
     print "#### Querying Bestiary ####"
     B = Bestiary(fr_cookie=FR_COOKIE, verbosity=VERBOSITY)
     BESTIARY_BREAKDOWN = B.get_all()
+    print " #-- Bestiary Results --#"
+    B.print_beasts_breakdown()
     print "BESTIARY_BREAKDOWN =", BESTIARY_BREAKDOWN
 
 # pets all your currently being tamed familiars & prints the results
