@@ -169,18 +169,21 @@ class Bestiary(FrBase):
                 loyal.append(beast)
 
         # print stats
-        print "locked: ", len(breakdown["locked"]),
-        print " -", breakdown["locked"]
-        print "awakened: ", len(breakdown["awakened"])
-        print "taming: ", len(breakdown["taming"])
-        print " -- wary: ", len(wary), "-", wary
-        print " -- tolerant: ", len(tolerant), "-", tolerant
-        print " -- relaxed: ", len(relaxed), "-", relaxed
-        print " -- inquisitive: ", len(inquisitive), "-", inquisitive
-        print " -- companion: ", len(companion), "-", companion
-        print " -- loyal: ", len(loyal), "-", loyal
-        print "total =", len(breakdown["bestiary"])
-        print
+        stats = [
+            "locked: {} - {}".format(len(breakdown["locked"]), breakdown["locked"]),
+            "awakened: {}".format(len(breakdown["awakened"])),
+            "taming: {}".format(len(breakdown["taming"])),
+            " -- wary: {} - {}".format(len(wary), wary),
+            " -- tolerant: {} - {}".format(len(tolerant), tolerant),
+            " -- relaxed: {} - {}".format(len(relaxed), relaxed),
+            " -- inquisitive: {} - {}".format(len(inquisitive), inquisitive),
+            " -- companion: {} - {}".format(len(companion), companion),
+            " -- loyal: {} - {}".format(len(loyal), loyal),
+            "total = {}".format(len(breakdown["bestiary"]))
+        ]
+        for msg in stats:
+            self.echo(msg, newline=True)
+        self.echo("", newline=True)
 
     def __parse_bestiary_page(self, html):
         """

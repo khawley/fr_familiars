@@ -38,8 +38,7 @@ class FrBase(object):
         :param bool verbose: whether to actually print
         :return:
         """
-        if newline:
-            msg += "\n"
+        msg += "\n" if newline else " "
         if self.verbosity or verbose:
             sys.stdout.write(msg)
 
