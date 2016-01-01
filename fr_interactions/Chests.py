@@ -252,7 +252,7 @@ class Chests(FrBase):
         :return:
         """
         if not self.item_totals:
-            print "No chests opened"
+            self.echo("No chests opened", newline=True)
             return
 
         # make item_map only from item_totals, sort by type
@@ -260,16 +260,22 @@ class Chests(FrBase):
                                   for item_id in self.item_totals.keys()
                                   if item_id in self.item_map],
                                  key=lambda x: x["type"])
-        print "Chest Results"
+        self.echo("Chest Results", newline=True)
         # print treasure + gems separately, since they aren't in the item_map
-        print "- Treasure:", self.item_totals["treasure"]
-        print "- Gems:", self.item_totals.get("gem", "0")
-        print
+        self.echo("- Treasure: {}".format(self.item_totals["treasure"]),
+                  newline=True)
+        self.echo("- Gems: {}".format(self.item_totals.get("gem", "0")),
+                  newline=True)
+        self.echo("", newline=True)
 
         this_type = None
         for item_dict in sorted_item_map:
             if item_dict["type"] != this_type:
                 this_type = item_dict["type"]
-                print "===", item_dict["type"], "==="
-            print "-", item_dict["name"], self.item_totals[item_dict["id"]],
-            print "(id:" + item_dict["id"] + ")"
+                self.echo("=== {} ===".format(this_type),
+                          newline=True)
+            item_msg = "- {} {} (id:{})"\
+                .format(item_dict["name"],
+                        self.item_totals[item_dict["id"]],
+                        item_dict["id"])
+            self.echo(item_msg, newline=True)
