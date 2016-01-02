@@ -250,7 +250,7 @@ class PetFamiliars(FrBase):
             self.echo(" -- not equipping, no default dragon")
             return False
 
-        for i in xrange(0, len(self.dragons)):
+        for i in range(0, len(self.dragons)):
             if self.dragons[i]["dragon_id"] == dragon_id:
                 self.dragons[i]["familiar_id"] = familiar_id
         self.echo(" ~ equipping familiar")
