@@ -78,7 +78,7 @@ class Bestiary(FrBase):
         if not self.is_logged_in(html):
             exit()
 
-        self.echo(" -- parsing", True)
+        self.echo_n(" -- parsing")
         return self.__parse_bestiary_page(html)
 
     def get_one_page(self, page):

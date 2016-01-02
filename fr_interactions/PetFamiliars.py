@@ -93,7 +93,7 @@ class PetFamiliars(FrBase):
             chest = ""
             if result.get("chest"):
                 chest = " -- chest: " + result["chest"]
-            self.echo(" -- message: " + result["msg"] + chest, True)
+            self.echo_n(" -- message: " + result["msg"] + chest)
         self.__breakdown_taming_results()
 
     def __breakdown_taming_results(self):

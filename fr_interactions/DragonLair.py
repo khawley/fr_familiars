@@ -55,7 +55,7 @@ class DragonLair(FrBase):
             # confirm user is logged in
             # will continue unhindered regardless
             self.is_logged_in(html)
-            self.echo(" - parsing lair page", True)
+            self.echo_n(" - parsing lair page")
             if not self.__parse_lair_page(html):
                 break
             i += 1
@@ -97,8 +97,8 @@ class DragonLair(FrBase):
             match = re.search(self.dragon_url_patt, a_tag.attrs["href"])
             if match:
                 result["dragon_id"] = match.group("dragon_id")
-                self.echo("-- found dragon_id: " +
-                          str(result["dragon_id"]), True)
+                self.echo_n("-- found dragon_id: " +
+                          str(result["dragon_id"]))
 
             loginbars = dragon_card.select(".loginbar")
             if result["dragon_id"] and loginbars:
@@ -124,7 +124,7 @@ class DragonLair(FrBase):
         dragon_html = self.curl(self.dragon_url + str(dragon_id))
         self.echo(" -- parsing")
         fam_id = self.__parse_dragon_page(dragon_html)
-        self.echo(" -- with familiar: " + str(fam_id), True)
+        self.echo_n(" -- with familiar: " + str(fam_id))
         return fam_id
 
     def __parse_dragon_page(self, html):

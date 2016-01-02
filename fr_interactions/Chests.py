@@ -82,7 +82,7 @@ class Chests(FrBase):
             result = self.open_one_chest(GILDED_CHEST_ID)
             self.raw_results["gilded"].append(tuple(result))
             if result:
-                self.echo("-- opened gilded chest: "+str(result), True)
+                self.echo_n("-- opened gilded chest: "+str(result))
             i += 1
             if i == quantity or not result:
                 break
@@ -102,7 +102,7 @@ class Chests(FrBase):
             result = self.open_one_chest(IRON_CHEST_ID)
             self.raw_results["iron"].append(tuple(result))
             if result:
-                self.echo("-- opened iron chest: "+str(result), True)
+                self.echo_n("-- opened iron chest: "+str(result))
             i += 1
             if i == quantity or not result:
                 break
@@ -122,7 +122,7 @@ class Chests(FrBase):
             result = self.open_one_chest(RUSTED_CHEST_ID)
             self.raw_results["rusted"].append(tuple(result))
             if result:
-                self.echo("-- opened rusted chest: "+str(result), True)
+                self.echo_n("-- opened rusted chest: "+str(result))
             i += 1
             if i == quantity or not result:
                 break
