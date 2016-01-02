@@ -182,8 +182,8 @@ class Bestiary(FrBase):
             "total = {}".format(len(breakdown["bestiary"]))
         ]
         for msg in stats:
-            self.echo(msg, newline=True)
-        self.echo("", newline=True)
+            self.echo_n(msg)
+        self.echo_n()
 
     def __parse_bestiary_page(self, html):
         """

@@ -42,6 +42,14 @@ class FrBase(object):
         if self.verbosity or verbose:
             sys.stdout.write(msg)
 
+    def echo_n(self, msg="", verbose=False):
+        """
+        A convenience wrapper for echoing with newline
+        :param str msg: String to be printed
+        :return:
+        """
+        self.echo(msg, newline=True, verbose=verbose)
+
     @staticmethod
     def error(msg, newline=False):
         """
