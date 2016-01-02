@@ -1,6 +1,9 @@
 from bs4 import BeautifulSoup
 from bs4.element import NavigableString
-from HTMLParser import HTMLParser
+try:
+    from HTMLParser import HTMLParser
+except:
+    from html.parser import HTMLParser
 import re
 
 
