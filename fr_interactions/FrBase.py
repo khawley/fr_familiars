@@ -84,29 +84,6 @@ class FrBase(object):
 
         return response.text
 
-    def __header_function(self, header_line):
-        # Header lines include the first status line (HTTP/1.x ...).
-        # We are going to ignore all lines that don't have a colon in them.
-        # This will botch headers that are split on multiple lines...
-        if ':' not in header_line:
-            return
-
-        # Break the header line into header name and value.
-        name, value = header_line.split(':', 1)
-
-        # Remove whitespace that may be present.
-        # Header lines include the trailing newline,
-        # and there may be whitespace around the colon.
-        name = name.strip()
-        value = value.strip()
-
-        # Header names are case insensitive.
-        # Lowercase name here.
-        name = name.lower()
-
-        # Now we can actually record the header name and value.
-        self.response_headers[name] = value
-
     def is_logged_in(self, html):
         """
         If not confirmed previously, check the html for the lack of #loginbar
@@ -127,12 +104,24 @@ class FrBase(object):
 
         soup = BeautifulSoup(html, "html.parser")
         # html is actually a bit broken, so can't just search for #usertab :(
-        usertabs = [div for div in soup.find_all("div")
-                    if div.attrs.get("id", "") == "usertab"]
-        usertab = usertabs.pop() if usertabs else None
+        login_divs = [div for div in soup.find_all("div")
+                    if div.attrs.get("id", "") in ["usertab", "loginform"]]
 
-        form = usertab.find("form") if usertab else None
-        if form and form.attrs.get("id", "") == "loginform":
+        div = login_divs.pop() if login_divs else None
+
+        # check by #usertab
+        # the form will be #loginform
+        if div and div.attrs.get("id") == "usertab":
+            form = div.find("form") if div else None
+            if form and form.attrs.get("id", "") != "loginform":
+                # unexpectedly not the #loginform.... should be fine...
+                return self.__is_logged_in
+
+        # div.attrs.get("id") == "loginform"
+        else:
+            form = div.find("form") if div else None
+
+        if form:
             # loginform was found, cookie is bad...
             self.error("You are not logged in.  Please check your cookie.",
                        True)
