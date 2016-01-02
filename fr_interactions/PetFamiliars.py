@@ -145,20 +145,23 @@ class PetFamiliars(FrBase):
         if not self.taming_breakdown:
             self.__breakdown_taming_results()
 
-        if self.taming_breakdown["gilded_chests"]:
-            print "gilded_chests:", len(self.taming_breakdown["gilded_chests"]),
-            print "-", self.taming_breakdown["gilded_chests"]
-        else:
-            print "gilded_chests: 0"
-        print "iron_chests:", len(self.taming_breakdown["iron_chests"])
-        print "rusted_chests:", len(self.taming_breakdown["rusted_chests"])
-        print "total_treasure:", self.taming_breakdown["total_treasure"]
-        print "total successfully pet:", \
-            len(self.taming_breakdown["successes"])
+        for chest in ["gilded_chests", "iron_chests", "rusted_chests"]:
+            chests_len = len(self.taming_breakdown[chest])
+            msg = "{}: {}".format(chest, chests_len)
+            if chests_len:
+                msg += " - {}".format(self.taming_breakdown[chest])
+            self.echo_n(msg)
+
+        self.echo_n("total_treasure: {}"
+                    .format(self.taming_breakdown["total_treasure"]))
+
+        self.echo_n("total successfully pet: {}"
+                    .format(self.taming_breakdown["successes"]))
 
         if self.taming_breakdown["failures"]:
-            print "failed:", len(self.taming_breakdown["failures"]),
-            print "-", self.taming_breakdown["failures"]
+            self.echo_n("failed: {} - {}"
+                        .format(len(self.taming_breakdown["failures"]),
+                                self.taming_breakdown["failures"]))
 
     def pet_one_familiar(self, familiar_id, familiar_name="",
                          recursing=False):
