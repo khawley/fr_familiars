@@ -31,6 +31,10 @@ It is also set to do a full run, collecting all your dragons and all your beasts
 If it breaks or something goes wrong, send me an issue!  I'd like to fix it.
 
 ## Version Changes
+**1.3.3**
+
+- bug fix with Chests.  If no chests were opened, the script would break.
+
 **1.3.2**
 
  - another important bug fix.  Needed to support ssl for requests
