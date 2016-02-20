@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 from bs4.element import NavigableString
 try:
     from HTMLParser import HTMLParser
-except:
+except ImportError:
     from html.parser import HTMLParser
 import re
 
