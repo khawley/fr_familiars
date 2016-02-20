@@ -3,6 +3,7 @@ import unittest
 from fr_interactions.Bestiary import Bestiary
 from settings import FR_COOKIE
 from data_for_tests import BEASTS, BESTIARY_BREAKDOWN
+from utils import capture_output
 
 
 class TestBestiary(unittest.TestCase):
@@ -34,6 +35,10 @@ class TestBestiary(unittest.TestCase):
         # not initialized with beasts, and none to breakdown,
         # will error and return empty
         self.assertEqual(self.B._Bestiary__breakdown_beasts(), None)
+        with capture_output() as (out, err):
+            self.assertEqual(self.B._Bestiary__breakdown_beasts(), None)
+            sys_stderr = err.getvalue()
+            self.assertTrue(sys_stderr)
 
     def test_get_beast_by_id(self):
         beast_dict = {'src': u'/images/cms/familiar/art/358.png', 'loyalty': u'Awakened', 'id': u'358', 'name': u'Autumn Dryad'}
@@ -113,7 +118,6 @@ class TestBestiary(unittest.TestCase):
         self.assertEqual(
             get_beast_by_field('src', beast_dict['src'], 'locked'),
             {})
-
 
 
 if __name__ == '__main__':
