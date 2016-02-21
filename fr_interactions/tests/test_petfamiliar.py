@@ -2,8 +2,9 @@ import unittest
 from fr_interactions.PetFamiliars import PetFamiliars
 from settings import FR_COOKIE
 from html_curl_responses.CurlPetFamiliarResponses \
-    import CurlPetFamiliarResponses
-
+    import GOLD_CHEST_RESPONSE, IRON_CHEST_RESPONSE, RUSTED_CHEST_RESPONSE, \
+    TREASURE_ONLY_RESPONSE, GEM_RESPONSE
+from mock import patch
 
 class TestPetFamiliars(unittest.TestCase):
     # no curling will take place, so no actual cookie is needed
@@ -69,47 +70,49 @@ class TestPetFamiliars(unittest.TestCase):
 
     # test passing in uequip_awakened
     def test_pet_my_familiar_unequip_awakened_is_false(self):
-        # __unequip_familiar should not be called from pet_one_familiar
-        self.PF_gold_chest = PetFamiliars(
-            self.FR_COOKIE,
-            equip_dragon=self.EQUIP_DRAGON,
-            bestiary_breakdown=self.BESTIARY_BREAKDOWN,
-            dragon_list=self.DRAGON_LIST,
-            unequip_awakened=False
-        )
-        self.PF_gold_chest.curl = CurlPetFamiliarResponses.respond_gold_chest
-        attached_to_dragon_before_pet = \
-            self.PF_gold_chest._PetFamiliars__find_dragon_with_familiar(
-                self.LOYAL_FAMILIAR["id"])
-        self.PF_gold_chest.pet_one_familiar(self.LOYAL_FAMILIAR["id"])
-        attached_to_dragon_after_pet = \
-            self.PF_gold_chest._PetFamiliars__find_dragon_with_familiar(
-                self.LOYAL_FAMILIAR["id"])
-        # these should match, as the familiar was not unequipped
-        self.assertEqual(attached_to_dragon_before_pet,
-                         attached_to_dragon_after_pet)
+        with patch.object(PetFamiliars, 'curl') as mock_curl:
+            # __unequip_familiar should not be called from pet_one_familiar
+            self.PF_gold_chest = PetFamiliars(
+                self.FR_COOKIE,
+                equip_dragon=self.EQUIP_DRAGON,
+                bestiary_breakdown=self.BESTIARY_BREAKDOWN,
+                dragon_list=self.DRAGON_LIST,
+                unequip_awakened=False
+            )
+            mock_curl.return_value = GOLD_CHEST_RESPONSE
+            attached_to_dragon_before_pet = \
+                self.PF_gold_chest._PetFamiliars__find_dragon_with_familiar(
+                    self.LOYAL_FAMILIAR["id"])
+            self.PF_gold_chest.pet_one_familiar(self.LOYAL_FAMILIAR["id"])
+            attached_to_dragon_after_pet = \
+                self.PF_gold_chest._PetFamiliars__find_dragon_with_familiar(
+                    self.LOYAL_FAMILIAR["id"])
+            # these should match, as the familiar was not unequipped
+            self.assertEqual(attached_to_dragon_before_pet,
+                             attached_to_dragon_after_pet)
 
     # cannot use this test because the dragon list does not update currently
     def test_pet_my_familiar_unequip_awakened_is_true(self):
-        # __unequip_familiar should be called from pet_one_familiar
-        PF_gold_chest = PetFamiliars(
-            self.FR_COOKIE,
-            equip_dragon=self.EQUIP_DRAGON,
-            bestiary_breakdown=self.BESTIARY_BREAKDOWN,
-            dragon_list=self.DRAGON_LIST,
-            unequip_awakened=True
-        )
-        PF_gold_chest.curl = CurlPetFamiliarResponses.respond_gold_chest
-        attached_to_dragon_before_pet = \
-            PF_gold_chest._PetFamiliars__find_dragon_with_familiar(
-                self.LOYAL_FAMILIAR["id"])
-        PF_gold_chest.pet_one_familiar(self.LOYAL_FAMILIAR["id"])
-        attached_to_dragon_after_pet = \
-            PF_gold_chest._PetFamiliars__find_dragon_with_familiar(
-                self.LOYAL_FAMILIAR["id"])
-        # these should match, as the familiar was not unequipped
-        # self.assertNotEqual(attached_to_dragon_before_pet,
-        #                  attached_to_dragon_after_pet)
+        with patch.object(PetFamiliars, 'curl') as mock_curl:
+            # __unequip_familiar should be called from pet_one_familiar
+            PF_gold_chest = PetFamiliars(
+                self.FR_COOKIE,
+                equip_dragon=self.EQUIP_DRAGON,
+                bestiary_breakdown=self.BESTIARY_BREAKDOWN,
+                dragon_list=self.DRAGON_LIST,
+                unequip_awakened=True
+            )
+            mock_curl.return_value = GOLD_CHEST_RESPONSE
+            attached_to_dragon_before_pet = \
+                PF_gold_chest._PetFamiliars__find_dragon_with_familiar(
+                    self.LOYAL_FAMILIAR["id"])
+            PF_gold_chest.pet_one_familiar(self.LOYAL_FAMILIAR["id"])
+            attached_to_dragon_after_pet = \
+                PF_gold_chest._PetFamiliars__find_dragon_with_familiar(
+                    self.LOYAL_FAMILIAR["id"])
+            # these should match, as the familiar was not unequipped
+            # self.assertNotEqual(attached_to_dragon_before_pet,
+            #                  attached_to_dragon_after_pet)
 
     # test passing in equip_next_after_awakening
     def test_pet_my_familiar_equip_next_after_awakening_is_false(self):

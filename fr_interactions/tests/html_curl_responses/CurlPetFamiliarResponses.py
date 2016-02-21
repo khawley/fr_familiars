@@ -1,30 +1,8 @@
 
-class CurlPetFamiliarResponses(object):
+# need to get a sample html
+GEM_RESPONSE = """ """
 
-    @classmethod
-    def respond_gold_chest(cls, *args, **kwargs):
-        return cls.gold_chest_response
-
-    @classmethod
-    def respond_iron_chest(cls, *args, **kwargs):
-        return cls.iron_chest_response
-
-    @classmethod
-    def respond_rusted_chest(cls, *args, **kwargs):
-        return cls.rusted_chest_response
-
-    @classmethod
-    def respond_treasure_only(cls, *args, **kwargs):
-        return cls.treasure_only_response
-
-    @classmethod
-    def respond_gem(cls, *args, **kwargs):
-        return cls.gem_response
-
-    # need to get a sample html
-    gem_response = """ """
-
-    gold_chest_response = """
+GOLD_CHEST_RESPONSE = """
         <script type="text/javascript">
 $(function(){
 	$('#no').click(function(e){
@@ -72,7 +50,7 @@ $(function(){
 
 """
 
-    iron_chest_response = """
+IRON_CHEST_RESPONSE = """
     <script type="text/javascript">
 $(function(){
 	$('#no').click(function(e){
@@ -120,7 +98,7 @@ $(function(){
 
 """
 
-    rusted_chest_response = """
+RUSTED_CHEST_RESPONSE = """
         <script type="text/javascript">
 $(function(){
 	$('#no').click(function(e){
@@ -168,7 +146,7 @@ $(function(){
 
 """
 
-    treasure_only_response = """
+TREASURE_ONLY_RESPONSE = """
     <script type="text/javascript">
 $(function(){
 	$('#no').click(function(e){
