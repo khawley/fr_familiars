@@ -4,7 +4,7 @@ from fr_interactions.FrBase import FrBase
 from settings import FR_COOKIE
 
 
-class TestBestiary(unittest.TestCase):
+class TestFrBase(unittest.TestCase):
     def setUp(self):
         self.fr_base = FrBase(FR_COOKIE, verbosity=True)
         self.url = "http://flightrising.com/main.php"
