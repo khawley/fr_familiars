@@ -1,7 +1,7 @@
 import unittest
 from fr_interactions.PetFamiliars import PetFamiliars
 from settings import FR_COOKIE
-from html_curl_responses.CurlPetFamiliarResponses \
+from stock_data.CurlPetFamiliarResponses \
     import GOLD_CHEST_RESPONSE, IRON_CHEST_RESPONSE, RUSTED_CHEST_RESPONSE, \
     TREASURE_ONLY_RESPONSE, GEM_RESPONSE
 from mock import patch

@@ -1,8 +1,8 @@
 import unittest
 
 from fr_interactions.Bestiary import Bestiary
+from fr_interactions.tests.stock_data.data_for_tests import BEASTS, BESTIARY_BREAKDOWN, NOT_LOGGED_IN_BESTIARY_PAGE_1
 from settings import FR_COOKIE
-from data_for_tests import BEASTS, BESTIARY_BREAKDOWN
 from utils import capture_output
 
 
