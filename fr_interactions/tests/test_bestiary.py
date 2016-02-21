@@ -118,8 +118,3 @@ class TestBestiary(unittest.TestCase):
         self.assertEqual(
             get_beast_by_field('src', beast_dict['src'], 'locked'),
             {})
-
-
-if __name__ == '__main__':
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestBestiary)
-    unittest.TextTestRunner(verbosity=2).run(suite)

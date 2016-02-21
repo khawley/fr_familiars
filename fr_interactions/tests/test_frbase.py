@@ -87,8 +87,3 @@ class TestBestiary(unittest.TestCase):
             self.fr_base.error(msg, newline=True)
             self.assertEqual(err.getvalue(), msg + "\n")
             self.assertFalse(out.getvalue())
-
-
-if __name__ == '__main__':
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestBestiary)
-    unittest.TextTestRunner(verbosity=1).run(suite)
