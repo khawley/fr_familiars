@@ -72,11 +72,10 @@ class FrBase(object):
         :rtype: str
         """
 
-        if post_data:
-            response = requests.post(url, headers=self.send_headers,
-                                     data=post_data)
-        else:
-            response = requests.get(url, headers=self.send_headers)
+        method = "POST" if post_data else "GET"
+
+        response = requests.request(method=method, url=url,
+                                    headers=self.send_headers, data=post_data)
 
         if not response.ok:
             self.error("Failed to make request to " + url, True)
