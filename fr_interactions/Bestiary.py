@@ -124,10 +124,6 @@ class Bestiary(FrBase):
             else:
                 taming.append(beast)
 
-        if len(beasts_to_breakdown) != \
-                (len(locked) + len(awakened) + len(taming)):
-            self.error("Error!  Not adding up correctly!")
-
         return {
             "bestiary": beasts_to_breakdown,
             "awakened": awakened,

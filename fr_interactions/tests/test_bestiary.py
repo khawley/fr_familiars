@@ -1,7 +1,10 @@
 import unittest
 
+from mock import patch
+
 from fr_interactions.Bestiary import Bestiary
-from fr_interactions.tests.stock_data.data_for_tests import BEASTS, BESTIARY_BREAKDOWN, NOT_LOGGED_IN_BESTIARY_PAGE_1
+from fr_interactions.tests.stock_data.stock_vars import BEASTS, BESTIARY_BREAKDOWN
+from fr_interactions.tests.stock_data.CurlBestiaryResponses import NOT_LOGGED_IN_BESTIARY_PAGE_1
 from settings import FR_COOKIE
 from utils import capture_output
 
@@ -21,6 +24,15 @@ class TestBestiary(unittest.TestCase):
         # confirm self.beasts was created from the bestiary breakdown
         self.assertEqual(B.beasts.sort(), BEASTS.sort())
 
+    def test__get_page(self):
+        with patch.object(Bestiary, 'curl') as mock_curl:
+            B = Bestiary("PHPSESSID")
+
+            # not logged in, raises error
+            with self.assertRaises(SystemExit):
+                mock_curl.return_value = NOT_LOGGED_IN_BESTIARY_PAGE_1
+                B._Bestiary__get_page("1")
+
     def test_get_one_page(self):
         pass
     
@@ -34,11 +46,11 @@ class TestBestiary(unittest.TestCase):
 
         # not initialized with beasts, and none to breakdown,
         # will error and return empty
-        self.assertEqual(self.B._Bestiary__breakdown_beasts(), None)
         with capture_output() as (out, err):
             self.assertEqual(self.B._Bestiary__breakdown_beasts(), None)
             sys_stderr = err.getvalue()
-            self.assertTrue(sys_stderr)
+            self.assertEqual(sys_stderr,
+                             "Error: No lists of beasts to breakdown")
 
     def test_get_beast_by_id(self):
         beast_dict = {'src': u'/images/cms/familiar/art/358.png', 'loyalty': u'Awakened', 'id': u'358', 'name': u'Autumn Dryad'}
