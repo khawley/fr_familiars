@@ -181,8 +181,8 @@ class Bestiary(FrBase):
             "total = {}".format(len(breakdown["bestiary"]))
         ]
         for msg in stats:
-            self.echo_n(msg)
-        self.echo_n()
+            self.echo_n(msg, verbose=True)
+        self.echo_n(verbose=True)
 
     def __parse_bestiary_page(self, html):
         """
@@ -190,7 +190,8 @@ class Bestiary(FrBase):
         Store id, img_src, name, and loyalty of each beast found.
 
         :param string html:
-        :return: None
+        :return: list of dicts of all the beasts on this page of the bestiary
+        :rtype: list[dict]
         """
         this_page_beasts = []
         soup = BeautifulSoup(html, "html.parser")
