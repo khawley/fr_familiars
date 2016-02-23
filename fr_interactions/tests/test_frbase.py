@@ -7,6 +7,7 @@ from settings import FR_COOKIE
 class TestFrBase(unittest.TestCase):
     def setUp(self):
         self.fr_base = FrBase(FR_COOKIE, verbosity=True)
+        self.fr_base_muted = FrBase(FR_COOKIE, verbosity=False)
         self.url = "http://flightrising.com/main.php"
         self.ajax_url = "http://flightrising.com/includes/hoard_main.php"
 
@@ -69,11 +70,32 @@ class TestFrBase(unittest.TestCase):
             self.assertEqual(out.getvalue(), msg + "\n")
             self.assertFalse(err.getvalue())
 
+        # muted
+        with capture_output() as (out, err):
+            self.fr_base_muted.echo(msg)
+            self.assertFalse(out.getvalue())
+            self.assertFalse(err.getvalue())
+        # muted made loud
+        with capture_output() as (out, err):
+            self.fr_base_muted.echo(msg, verbose=True)
+            self.assertEqual(out.getvalue(), msg + " ")
+            self.assertFalse(err.getvalue())
+
     def test_echo_n(self):
         msg = "hello world"
         with capture_output() as (out, err):
             self.fr_base.echo_n(msg)
             self.assertEqual(out.getvalue(), msg + "\n")
+            self.assertFalse(err.getvalue())
+
+        with capture_output() as (out, err):
+            self.fr_base_muted.echo(msg)
+            self.assertFalse(out.getvalue())
+            self.assertFalse(err.getvalue())
+
+        with capture_output() as (out, err):
+            self.fr_base_muted.echo(msg, verbose=True)
+            self.assertEqual(out.getvalue(), msg + " ")
             self.assertFalse(err.getvalue())
 
     def test_error(self):
@@ -86,4 +108,10 @@ class TestFrBase(unittest.TestCase):
         with capture_output() as (out, err):
             self.fr_base.error(msg, newline=True)
             self.assertEqual(err.getvalue(), msg + "\n")
+            self.assertFalse(out.getvalue())
+
+        # muted still announces errors
+        with capture_output() as (out, err):
+            self.fr_base_muted.error(msg)
+            self.assertEqual(err.getvalue(), msg)
             self.assertFalse(out.getvalue())

@@ -48,7 +48,8 @@ class FrBase(object):
         :param str msg: String to be printed
         :return:
         """
-        self.echo(msg, newline=True, verbose=verbose)
+        if self.verbosity or verbose:
+            self.echo(msg, newline=True, verbose=verbose or self.verbosity)
 
     @staticmethod
     def error(msg, newline=False):
